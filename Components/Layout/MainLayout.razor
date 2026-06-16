@@ -1,0 +1,78 @@
+﻿@inherits LayoutComponentBase
+
+<header class="gov-header">
+
+    <div class="gov-container header-content">
+
+        <!-- IZQUIERDA -->
+        <div class="gov-left">
+            <img src="img/logo_agrorural.png" class="gov-logo" alt="AgroRural" />
+
+            <div class="gov-title">
+                <span class="gov-ministry">
+                    Programa de Desarrollo Productivo Agrario Rural
+                </span>
+                <span class="gov-system">Mesa de Partes Digital</span>
+            </div>
+        </div>
+
+        <!-- DERECHA (AGRUPADO) -->
+        <div class="gov-right">
+
+            <button class="gov-btn-outline" @onclick="ConsultarExpediente">
+                Consulta tu expediente
+            </button>
+
+            <a class="gov-btn-outline"
+               href="https://intranet.agrorural.gob.pe/mesadepartes/Content/pdf/Manual_Usuario_MP_v2.pdf"
+               target="_blank">
+                Descargar manual
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+<main class="gov-body">
+    @Body
+</main>
+
+<footer class="gov-footer">
+ 
+        <div class="gov-footer-container">
+
+            <div class="gov-footer-block">
+                <strong>Navegadores Recomendados</strong>
+                <span>Chrome, Edge, Firefox (versiones actualizadas)</span>
+            </div>
+
+            <div class="gov-footer-block">
+            <strong>
+                AGRO RURAL
+            </strong>
+            <span>Jirón Cahuide 805, Jesús María 15072</span>
+            </div>
+
+            <div class="gov-footer-block">
+            <strong>Desarrollado por la Sub Unidad de Tecnologías de la Información</strong>
+            <span>
+                📞 Consultas: (01) 2058030 Anexo 0105
+            </span>
+            <span>
+                🕓 Horario: Lunes a Viernes de 8:30 a. m a 4:30 p. m.
+            </span>
+            </div>
+
+        </div>
+         
+</footer>
+
+@code {
+    private void ConsultarExpediente()
+    {
+        Console.WriteLine("Ir a consulta de expediente");
+        // aquí luego navegas a /consulta o modal
+    }
+}

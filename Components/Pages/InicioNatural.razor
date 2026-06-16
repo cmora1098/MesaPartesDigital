@@ -1,0 +1,431 @@
+﻿@page "/inicio/natural"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components.Forms
+
+<div class="ux-bg">
+
+    <div class="ux-container">
+
+        <!-- HEADER SIMPLE -->
+        <div class="ux-header">
+            <div class="ux-badge-top">Mesa de Partes Digital</div>
+            <h1>Persona Natural</h1>
+            <p class="ux-description">
+                Completa tus datos para registrar tu documento de forma digital.
+            </p>
+        </div>
+
+        <!-- PROGRESS -->
+        <ul class="wizard-progress">
+            <li class="@StepClass(1)">Datos</li>
+            <li class="@StepClass(2)">Verificación</li>
+            <li class="@StepClass(3)">Documento</li>
+            <li class="@StepClass(4)">Final</li>
+        </ul>
+
+        <!-- STEP 1 -->
+        @if (step == 1)
+        {
+            <div class="ux-card-form">
+
+                @* <h2>Validación de Datos del Ciudadano</h2>
+
+                <p class="ux-muted">
+                    Estimado ciudadano, por este canal virtual podrá presentar documentos de forma rápida
+                    sin necesidad de acercarse a la Mesa de Partes del Despacho Presidencial.
+                </p> *@
+
+                <p class="ux-muted">
+                    Estimado usuario, para realizar tu servicio en línea, primero debes validar tus datos.
+                </p>
+
+                <div class="ux-section-title">
+                    Validación de Datos del Ciudadano
+                </div>
+
+                <div class="ux-grid-form">
+
+                    <!-- Tipo documento -->
+                    <div class="ux-field">
+                        <label>Tipo de Documento <span>*</span></label>
+                        <select>
+                            <option>DNI</option>
+                            <option>RUC</option>
+                        </select>
+                    </div>
+
+                    <!-- Nro documento -->
+                    <div class="ux-field">
+                        <label>Nro. de Documento <span>*</span></label>
+                        <input placeholder="Ingrese número" />
+                    </div>
+
+                    <!-- Fecha emisión -->
+                    @* <div class="ux-field">
+                        <label>Fecha de Emisión de DNI <span>*</span></label>
+                        <input type="date" />
+                    </div> *@
+
+                    <!-- Apellidos -->
+                    <div class="ux-field">
+                        <label>Apellido Paterno<span>*</span></label>
+                        <input />
+                    </div>
+
+                    <div class="ux-field">
+                        <label>Apellido Materno<span>*</span></label>
+                        <input />
+                    </div>
+
+                    <!-- Nombres -->
+                    <div class="ux-field">
+                        <label>Nombres <span>*</span></label>
+                        <input />
+                    </div>
+
+                    <!-- Correo -->
+                    <div class="ux-field">
+                        <label>Correo Electrónico <span>*</span></label>
+                        <input type="email" />
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div class="ux-field">
+                        <label>Teléfono <span>*</span></label>
+                        <input />
+                    </div>
+
+                    @* <!-- Fecha nacimiento -->
+                    <div class="ux-field">
+                        <label>Fecha Nacimiento <span>*</span></label>
+                        <input type="date" />
+                    </div> *@
+
+                    <!-- Ubigeo -->
+                    @* <div class="ux-field full">
+                        <label>Lugar de Domicilio <span>*</span></label>
+                        <input placeholder="Buscar Lugar de Domicilio" />
+                    </div> *@
+
+                    <!-- Dirección -->
+                    @* <div class="ux-field full">
+                        <label>Dirección <span>*</span></label>
+                        <input />
+                    </div> *@
+
+                </div>
+
+                <div class="ux-actions-right">
+                    <button class="ux-button" @onclick="Next">
+                        Siguiente →
+                    </button>
+                </div>
+
+            </div>
+        }
+
+        <!-- STEP 2 -->
+        @if (step == 2)
+        {
+            <div class="ux-card-form">
+
+                <h2>Verificación de correo</h2>
+                <p class="ux-muted">Ingresa el código enviado a tu correo electrónico.</p>
+
+                <input class="ux-input-code" placeholder="Código de verificación" />
+
+                <div class="ux-actions">
+                    <button class="ux-button-outline" @onclick="Prev">Anterior</button>
+                    <button class="ux-button" @onclick="Next">Siguiente</button>
+                </div>
+
+            </div>
+        }
+
+        <!-- STEP 3 -->
+        @if (step == 3)
+        {
+            @* <div class="ux-card-form">
+
+                <h2>Documento</h2>
+
+                <select>
+                    <option>--SELECCIONAR--</option>
+                    <option>Informe</option>
+                    <option>Memo</option>
+                    <option>Carta</option>
+                    <option>Oficio</option>
+                    <option>Resoluciones</option>
+                    <option>Otros</option>
+                </select>
+
+                <input placeholder="Nro Documento" />
+                <input placeholder="Folio" />
+
+                <input type="file" class="ux-file" />
+
+                <div class="ux-actions">
+                    <button class="ux-button-outline" @onclick="Prev">Anterior</button>
+                    <button class="ux-button" @onclick="Next">Confirmar</button>
+                </div>
+
+            </div> *@
+            <div class="ux-card-form">
+
+                <h2>Documento</h2>
+
+                <div class="ux-grid-form">
+
+                    <!-- Tipo documento -->
+                    <div class="ux-field">
+                        <label>Tipo de Documento *</label>
+                        <select>
+                            <option>--SELECCIONAR--</option>
+                            <option>Informe</option>
+                            <option>Memo</option>
+                            <option>Carta</option>
+                            <option>Oficio</option>
+                            <option>Resoluciones</option>
+                            <option>Otros</option>
+                        </select>
+                    </div>
+
+                    <!-- Número -->
+                    <div class="ux-field">
+                        <label>Nro Documento *</label>
+                        <input />
+                    </div>
+
+                    <!-- Folio -->
+                    <div class="ux-field">
+                        <label>Folio *</label>
+                        <input />
+                    </div>
+
+                    <div class="ux-field">
+                        <label>Fecha del Documento *</label>
+                        <input type="date" />
+                    </div>
+
+                    <!-- Sumilla -->
+                    <div class="ux-field full">
+                        <label>Sumilla *</label>
+                        <textarea maxlength="255" placeholder="Ingrese un resumen del documento / Máximo 255 caracteres"></textarea>
+                    </div>
+
+                    <!-- Referencia -->
+                    <div class="ux-field full">
+                        <label>Referencia (Opcional)</label>
+                        <input />
+                    </div>
+
+                </div>
+
+              @*   <!-- ARCHIVO -->
+                <div class="ux-file-section">
+
+                    <p class="ux-help">
+                        (El tamaño máximo del archivo PDF es de 25MB)
+                    </p>
+
+                    <input type="file" class="ux-file" />
+
+                    <p class="ux-muted">Sin archivos seleccionados</p>
+
+                    <p class="ux-help">
+                        Para archivos más grandes, ingresa un link.
+                    </p>
+
+                    <button class="ux-button-outline">
+                        + Agregar URL
+                    </button>
+
+                    <!-- LINK -->
+                    <div class="ux-field full">
+                        <label>Link del Archivo</label>
+                        <input placeholder="https://..." />
+                    </div>
+
+                </div>
+
+                <!-- ANEXOS -->
+                <div class="ux-anexos">
+
+                    <h3>Anexos</h3>
+
+                    <input type="file" class="ux-file" />
+
+                    <div class="ux-field full">
+                        <label>Descripción del Anexo (Opcional)</label>
+                        <input maxlength="255" />
+                        <small>Máximo 255 caracteres</small>
+                    </div>
+
+                </div> *@
+
+                <!-- ARCHIVO -->
+                <div class="ux-file-section">
+
+                    <p class="ux-help">
+                        (El tamaño máximo del archivo PDF es de 25MB)
+                    </p>
+
+                    <InputFile OnChange="OnFileSelected" accept=".pdf,application/pdf" class="ux-file" />
+
+                    @if (archivo != null)
+                    {
+                        <p class="ux-success">@archivo.Name</p>
+                    }
+                    else
+                    {
+                        <p class="ux-muted">Sin archivos seleccionados</p>
+                    }
+
+                    @if (!string.IsNullOrEmpty(error))
+                    {
+                        <p class="ux-error">@error</p>
+                    }
+
+                    <p class="ux-help">
+                        Para archivos más grandes, ingresa un link.
+                    </p>
+
+                    <button type="button" class="ux-button-outline" @onclick="ToggleUrl">
+                        + Agregar URL
+                    </button>
+
+                    @if (mostrarUrl)
+                    {
+                        <div class="ux-field full">
+                            <label>Link del Archivo</label>
+                            <input @bind="urlArchivo" placeholder="https://..." />
+                        </div>
+                    }
+
+                </div>
+
+                <!-- ANEXOS -->
+                <div class="ux-anexos">
+
+                    <h3>Anexos</h3>
+
+                    <InputFile OnChange="OnAnexoSelected" accept=".pdf,application/pdf" class="ux-file" />
+
+                    @foreach (var item in anexos)
+                    {
+                        <p class="ux-success">@item.Name</p>
+                    }
+
+                    <div class="ux-field full">
+                        <label>Descripción del Anexo (Opcional)</label>
+                        <input maxlength="255" @bind="descripcionAnexo" />
+                        <small>Máximo 255 caracteres</small>
+                    </div>
+
+                </div>
+
+                <!-- ACCIONES -->
+                <div class="ux-actions-between">
+
+                    <button class="ux-button-outline" @onclick="Prev">
+                        ← Anterior
+                    </button>
+
+                    <div>
+                        <button class="ux-button-outline">
+                            Agregar Anexo
+                        </button>
+
+                        <button class="ux-button" @onclick="Next">
+                            Finalizar
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+        <!-- STEP 4 -->
+        @if (step == 4)
+        {
+            <div class="ux-card-form ux-success">
+
+                <div class="ux-success-icon">✔</div>
+
+                <h2>Trámite concluido</h2>
+                <p>Tu solicitud fue registrada correctamente.</p>
+
+                <button class="ux-button" @onclick="Finish">Aceptar</button>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+@code {
+    private int step = 1;
+
+    void Next() { if (step < 4) step++; }
+    void Prev() { if (step > 1) step--; }
+    void Finish() => Console.WriteLine("OK");
+
+    string StepClass(int s) => step >= s ? "active" : "";
+
+
+
+    private IBrowserFile? archivo;
+    private List<IBrowserFile> anexos = new();
+
+    private string error = "";
+    private string urlArchivo = "";
+    private bool mostrarUrl = false;
+    private string descripcionAnexo = "";
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (!EsPdfValido(file))
+        {
+            error = "Solo se permiten archivos PDF.";
+            archivo = null;
+            return;
+        }
+
+        if (file.Size > 25 * 1024 * 1024)
+        {
+            error = "El archivo supera los 25MB.";
+            archivo = null;
+            return;
+        }
+
+        error = "";
+        archivo = file;
+    }
+
+    private void OnAnexoSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (EsPdfValido(file))
+        {
+            anexos.Add(file);
+        }
+    }
+
+    private bool EsPdfValido(IBrowserFile file)
+    {
+        return file.ContentType == "application/pdf" ||
+               file.Name.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void ToggleUrl()
+    {
+        mostrarUrl = !mostrarUrl;
+    }
+
+
+}
