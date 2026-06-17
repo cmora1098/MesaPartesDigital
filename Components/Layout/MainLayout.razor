@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
-
+@inject NavigationManager Navigation 
+ 
 <header class="gov-header">
 
     <div class="gov-container header-content">
@@ -19,15 +20,19 @@
         <!-- DERECHA (AGRUPADO) -->
         <div class="gov-right">
 
-            <button class="gov-btn-outline" @onclick="ConsultarExpediente">
+            <NavLink href="/consulta-expediente" class="gov-btn-outline">
                 Consulta tu expediente
-            </button>
+            </NavLink>
 
             <a class="gov-btn-outline"
                href="https://intranet.agrorural.gob.pe/mesadepartes/Content/pdf/Manual_Usuario_MP_v2.pdf"
                target="_blank">
                 Descargar manual
             </a>
+
+            <NavLink href="/login" class="gov-btn-outline">
+                Iniciar sesión
+            </NavLink>
 
         </div>
 
@@ -72,7 +77,6 @@
 @code {
     private void ConsultarExpediente()
     {
-        Console.WriteLine("Ir a consulta de expediente");
-        // aquí luego navegas a /consulta o modal
+        Navigation.NavigateTo("/consulta-expediente");
     }
 }

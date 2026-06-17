@@ -54,6 +54,7 @@
     padding: 0;
     margin: 25px 0;
     list-style: none;
+    flex-wrap: wrap;
 }
 
     .wizard-progress li {
@@ -74,24 +75,24 @@
 /* =========================
    CARD
 ========================= */
-.ux-card-form {
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(10px);
-    padding: 28px;
-    border-radius: 18px;
-    border: 1px solid rgba(148,163,184,0.2);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-}
-
-    .ux-card-form h2 {
-        margin-bottom: 10px;
-        color: #0f172a;
+    .ux-card-form {
+        background: rgba(255,255,255,0.9);
+        backdrop-filter: blur(10px);
+        padding: 28px;
+        border-radius: 18px;
+        border: 1px solid rgba(148,163,184,0.2);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     }
 
-.ux-muted {
-    font-size: 13px;
-    color: #64748b;
-}
+        .ux-card-form h2 {
+            margin-bottom: 10px;
+            color: #0f172a;
+        }
+
+    .ux-muted {
+        font-size: 13px;
+        color: #64748b;
+    }
 
 /* =========================
    FORM GRID
@@ -106,26 +107,48 @@
    INPUTS
 ========================= */
 input,
-select {
+select,
+textarea {
+    width: 100%;
     padding: 10px 12px;
     border-radius: 10px;
     border: 1px solid #e5e7eb;
     outline: none;
     transition: 0.2s;
+    font-family: inherit;
 }
 
     input:focus,
-    select:focus {
+    select:focus,
+    textarea:focus {
         border-color: #2563eb;
         box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    }
+
+/* TEXTAREA */
+textarea {
+    min-height: 90px;
+    resize: vertical;
+    background-color: #f8fafc;
+}
+
+    textarea:hover {
+        border-color: #94a3b8;
+    }
+
+    textarea::placeholder {
+        color: #94a3b8;
+        font-size: 12.5px;
     }
 
 /* =========================
    BUTTONS
 ========================= */
-.ux-actions {
+.ux-actions,
+.ux-actions-between {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 20px;
 }
 
@@ -143,6 +166,7 @@ select {
     border-radius: 999px;
     cursor: pointer;
     transition: 0.25s;
+    white-space: nowrap;
 }
 
     .ux-button:hover {
@@ -165,55 +189,6 @@ select {
     padding: 10px;
 }
 
-/* =========================
-   SUCCESS
-========================= */
-.ux-success {
-    text-align: center;
-}
-
-.ux-success-icon {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 10px;
-    border-radius: 50%;
-    background: #dcfce7;
-    color: #16a34a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 28px;
-}
-
-.ux-section-title {
-    margin: 15px 0;
-    font-size: 13px;
-    font-weight: 600;
-    color: #2563eb;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.ux-field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-    .ux-field label {
-        font-size: 12px;
-        color: #475569;
-    }
-
-        .ux-field label span {
-            color: #ef4444;
-        }
-
-    .ux-field.full {
-        grid-column: 1 / -1;
-    }
-
-
 .ux-file-section {
     margin-top: 20px;
     padding: 15px;
@@ -221,72 +196,6 @@ select {
     border-radius: 10px;
     background: #f8fafc;
 }
-
-.ux-anexos {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 10px;
-    background: #f1f5f9;
-}
-
-.ux-help {
-    font-size: 12px;
-    color: #64748b;
-}
-
-.ux-muted {
-    font-size: 12px;
-    color: #94a3b8;
-}
-
-textarea {
-    min-height: 80px;
-    resize: vertical;
-}
-
-.ux-actions-between {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-}
-
-
-textarea {
-    width: 100%;
-    min-height: 90px;
-    padding: 10px 12px;
-    font-size: 13px;
-    font-family: inherit;
-    color: #0f172a;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    background-color: #f8fafc;
-    resize: vertical;
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-    /* Hover */
-    textarea:hover {
-        border-color: #94a3b8;
-    }
-
-    /* Focus (clave UX) */
-    textarea:focus {
-        border-color: #2563eb;
-        background-color: #ffffff;
-        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-    }
-
-    /* Placeholder */
-    textarea::placeholder {
-        color: #94a3b8;
-        font-size: 12.5px;
-    }
-
-
-
 
 .ux-file-preview {
     display: flex;
@@ -316,16 +225,123 @@ textarea {
     cursor: pointer;
 }
 
+/* =========================
+   FIELDS
+========================= */
+.ux-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
 
+    .ux-field label {
+        font-size: 12px;
+        color: #475569;
+    }
 
+        .ux-field label span {
+            color: #ef4444;
+        }
+
+    .ux-field.full {
+        grid-column: 1 / -1;
+    }
+
+/* =========================
+   SUCCESS / ERROR
+========================= */
 .ux-success {
     color: #16a34a;
     font-size: 12px;
     margin-top: 5px;
+    text-align: center;
 }
 
 .ux-error {
     color: #dc2626;
     font-size: 12px;
     margin-top: 5px;
+}
+
+/* =========================
+   ANEXOS
+========================= */
+.ux-anexos {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background: #f1f5f9;
+}
+
+.ux-help {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* =========================
+   RESPONSIVE 🔥
+========================= */
+
+/* TABLET */
+@media (max-width: 768px) {
+
+    .ux-card-form {
+        padding: 20px;
+    }
+
+    .ux-grid-form {
+        grid-template-columns: 1fr;
+    }
+
+    .wizard-progress li {
+        font-size: 11px;
+        padding: 8px;
+    }
+
+    .ux-header h1 {
+        font-size: 22px;
+    }
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+
+    .ux-bg {
+        padding: 20px 10px;
+    }
+
+    .ux-card-form {
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .ux-header h1 {
+        font-size: 20px;
+    }
+
+    .ux-description {
+        font-size: 13px;
+    }
+
+    .ux-actions,
+    .ux-actions-between {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .ux-actions-right {
+        justify-content: center;
+    }
+
+    .ux-button,
+    .ux-button-outline {
+        width: 100%;
+        text-align: center;
+    }
+
+    .ux-file-preview {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
 }

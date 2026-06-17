@@ -39,9 +39,9 @@
                     Estimado usuario, para realizar tu servicio en línea, primero debes validar tus datos.
                 </p>
 
-                <div class="ux-section-title">
+                @* <div class="ux-section-title">
                     Validación de Datos del Ciudadano
-                </div>
+                </div> *@
 
                 <div class="ux-grid-form">
 
@@ -332,9 +332,9 @@
                     </button>
 
                     <div>
-                        <button class="ux-button-outline">
+                        @* <button class="ux-button-outline">
                             Agregar Anexo
-                        </button>
+                        </button> *@
 
                         <button class="ux-button" @onclick="Next">
                             Finalizar
@@ -370,7 +370,12 @@
 
     void Next() { if (step < 4) step++; }
     void Prev() { if (step > 1) step--; }
-    void Finish() => Console.WriteLine("OK");
+ 
+    [Inject] NavigationManager Nav { get; set; }
+    void Finish()
+    {
+        Nav.NavigateTo("/");
+    }
 
     string StepClass(int s) => step >= s ? "active" : "";
 

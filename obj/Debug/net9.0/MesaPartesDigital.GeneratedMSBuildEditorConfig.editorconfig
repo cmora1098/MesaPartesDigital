@@ -24,6 +24,10 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/cmora/source/repos/MesaPartesDigital/Components/Layout/EmptyLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcRW1wdHlMYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/cmora/source/repos/MesaPartesDigital/Components/Pages/Counter.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3VudGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
@@ -34,10 +38,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/cmora/source/repos/MesaPartesDigital/Components/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/cmora/source/repos/MesaPartesDigital/Components/Pages/InicioJuridica.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbmljaW9KdXJpZGljYS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/cmora/source/repos/MesaPartesDigital/Components/Pages/Weather.razor]
@@ -60,6 +60,22 @@ build_metadata.AdditionalFiles.CssScope = b-78u844zyj8
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-l813gkwszd
 
+[C:/Users/cmora/source/repos/MesaPartesDigital/Components/Pages/ConsultaExpediente.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb25zdWx0YUV4cGVkaWVudGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-6aqma9a1yn
+
+[C:/Users/cmora/source/repos/MesaPartesDigital/Components/Pages/Dashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEYXNoYm9hcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-fzeqij193l
+
+[C:/Users/cmora/source/repos/MesaPartesDigital/Components/Pages/InicioJuridica.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbmljaW9KdXJpZGljYS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-ehn9wmc07g
+
 [C:/Users/cmora/source/repos/MesaPartesDigital/Components/Pages/InicioNatural.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbmljaW9OYXR1cmFsLnJhem9y
 build_metadata.AdditionalFiles.CssScope = b-l1s7fg4eyt
+
+[C:/Users/cmora/source/repos/MesaPartesDigital/Components/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xMb2dpbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-33jr91t10f

@@ -1,0 +1,80 @@
+body[b-6aqma9a1yn] {
+}
+/* =========================
+   CONSULTA EXPEDIENTE
+========================= */
+
+.consulta-container[b-6aqma9a1yn] {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f7fb;
+    padding: 40px 20px;
+}
+
+.consulta-card[b-6aqma9a1yn] {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+    .consulta-card h2[b-6aqma9a1yn] {
+        margin-bottom: 10px;
+        color: #1e3a8a;
+    }
+
+.consulta-subtitle[b-6aqma9a1yn] {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 25px;
+}
+
+.consulta-form[b-6aqma9a1yn] {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group[b-6aqma9a1yn] {
+    display: flex;
+    flex-direction: column;
+}
+
+    .form-group label[b-6aqma9a1yn] {
+        font-size: 13px;
+        margin-bottom: 5px;
+        color: #374151;
+    }
+
+    .form-group input[b-6aqma9a1yn] {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        transition: 0.2s;
+    }
+
+        .form-group input:focus[b-6aqma9a1yn] {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+        }
+
+.btn-consultar[b-6aqma9a1yn] {
+    margin-top: 10px;
+    padding: 12px;
+    background: #16a34a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    .btn-consultar:hover[b-6aqma9a1yn] {
+        background: #15803d;
+    }

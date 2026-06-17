@@ -1,0 +1,285 @@
+/* =========================
+   FUENTE GLOBAL
+========================= */
+body[b-ehn9wmc07g] {
+    font-family: 'Segoe UI', 'Inter', sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+/* =========================
+   FONDO GENERAL (AGREGADO)
+========================= */
+.ux-bg[b-ehn9wmc07g] {
+    min-height: 100vh;
+    padding: 20px 10px 40px;
+    background: radial-gradient(circle at top left, #dbeafe, transparent 45%), radial-gradient(circle at bottom right, #ede9fe, transparent 45%), #f8fafc;
+}
+
+/* =========================
+   CONTENEDOR
+========================= */
+.ux-container[b-ehn9wmc07g] {
+    max-width: 950px;
+    margin: 10px auto 40px auto; /* 🔥 SUBE LA BARRA */
+}
+
+/* =========================
+   CARD
+========================= */
+.ux-card-full[b-ehn9wmc07g] {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 18px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+}
+
+/* ⚠️ ESTE YA NO SE USA EN FINAL */
+.ux-card-form[b-ehn9wmc07g] {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(10px);
+    padding: 28px;
+    border-radius: 18px;
+    border: 1px solid rgba(148,163,184,0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+    .ux-card-form h2[b-ehn9wmc07g] {
+        margin-bottom: 10px;
+        color: #0f172a;
+    }
+
+/* =========================
+   TEXTOS
+========================= */
+h2[b-ehn9wmc07g] {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+h3[b-ehn9wmc07g] {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ux-description[b-ehn9wmc07g] {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+/* =========================
+   PROGRESS (MEJOR POSICIÓN)
+========================= */
+.ux-progress[b-ehn9wmc07g] {
+    display: flex;
+    margin-top: 5px;
+    margin-bottom: 25px;
+}
+
+    .ux-progress .step[b-ehn9wmc07g] {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+        padding: 10px;
+        color: #94a3b8;
+        border-bottom: 3px solid #e5e7eb;
+    }
+
+        .ux-progress .step.active[b-ehn9wmc07g] {
+            color: #2563eb;
+            font-weight: 600;
+            border-bottom: 3px solid #2563eb;
+        }
+
+/* =========================
+   GRID
+========================= */
+.ux-grid[b-ehn9wmc07g] {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 15px;
+}
+
+.ux-grid-3[b-ehn9wmc07g] {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 15px;
+}
+
+/* =========================
+   CAMPOS
+========================= */
+.ux-field[b-ehn9wmc07g] {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+    .ux-field.full[b-ehn9wmc07g] {
+        grid-column: 1 / -1;
+    }
+
+/* =========================
+   LABEL
+========================= */
+label[b-ehn9wmc07g] {
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 6px;
+}
+
+/* =========================
+   INPUTS
+========================= */
+.ux-input[b-ehn9wmc07g] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    font-size: 13px;
+    background-color: #f9fafb;
+    transition: all 0.2s ease;
+}
+
+    .ux-input[b-ehn9wmc07g]::placeholder {
+        color: #94a3b8;
+    }
+
+    .ux-input:hover[b-ehn9wmc07g] {
+        border-color: #9ca3af;
+    }
+
+    .ux-input:focus[b-ehn9wmc07g] {
+        border-color: #2563eb;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        outline: none;
+    }
+
+/* =========================
+   FILA FLEX
+========================= */
+.ux-row[b-ehn9wmc07g] {
+    display: flex;
+    gap: 10px;
+    align-items: end;
+}
+
+/* =========================
+   BOTONES
+========================= */
+.ux-button[b-ehn9wmc07g] {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+    .ux-button:hover[b-ehn9wmc07g] {
+        background: #1e40af;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(30, 64, 175, 0.25);
+    }
+
+.ux-button-outline[b-ehn9wmc07g] {
+    background: transparent;
+    border: 1px solid #cbd5e1;
+    padding: 10px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+    .ux-button-outline:hover[b-ehn9wmc07g] {
+        background: #e0e7ff;
+    }
+
+/* =========================
+   MENSAJES
+========================= */
+.ux-help[b-ehn9wmc07g] {
+    font-size: 12px;
+    color: #64748b;
+    margin: 8px 0;
+}
+
+.ux-muted[b-ehn9wmc07g] {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.ux-error[b-ehn9wmc07g] {
+    color: #dc2626;
+    font-size: 12px;
+}
+
+.ux-success[b-ehn9wmc07g] {
+    color: #16a34a;
+    font-size: 12px;
+}
+
+/* =========================
+   FINAL (🔥 SIN DOBLE CARD)
+========================= */
+.ux-final[b-ehn9wmc07g] {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.ux-success-icon[b-ehn9wmc07g] {
+    font-size: 28px;
+    color: #16a34a;
+    margin-bottom: 10px;
+}
+
+.ux-final p[b-ehn9wmc07g] {
+    color: #16a34a;
+    margin-bottom: 20px;
+}
+
+/* =========================
+   ACCIONES
+========================= */
+.ux-actions[b-ehn9wmc07g] {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+/* =========================
+   HR
+========================= */
+hr[b-ehn9wmc07g] {
+    margin: 25px 0;
+    border: none;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+
+    .ux-grid[b-ehn9wmc07g],
+    .ux-grid-3[b-ehn9wmc07g] {
+        grid-template-columns: 1fr;
+    }
+
+    .ux-row[b-ehn9wmc07g] {
+        flex-direction: column;
+    }
+
+    .ux-button[b-ehn9wmc07g] {
+        width: 100%;
+    }
+}

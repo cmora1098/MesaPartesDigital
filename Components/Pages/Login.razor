@@ -1,0 +1,68 @@
+﻿@page "/login"
+@layout EmptyLayout
+@rendermode InteractiveServer
+
+@inject NavigationManager Nav
+
+<div class="login-wrapper">
+
+    <!-- IZQUIERDA -->
+    <div class="login-left">
+
+        <img src="img/logomax_agrorural.png" class="login-logo" />
+
+        <h2>Bienvenido a la Plataforma de Mesa de Partes Digital</h2>
+
+        <p>
+            Esta entidad pone a su disposición la Mesa de Partes Digital, un canal diseñado para brindar mayor agilidad, eficiencia y accesibilidad a sus trámites administrativos.
+        </p>
+
+        <p>
+            En cumplimiento con la Ley N° 31465 (que modifica la Ley N° 27444 del Procedimiento Administrativo General), nuestra plataforma se encuentra habilitada para la presentación de documentos las veinticuatro (24) horas del día, los siete (7) días de la semana.
+        </p>
+
+        <div class="alerta">
+            ⚠️ Nota importante sobre su recepción:<br />
+            El envío del documento no genera su aceptación automática. La recepción formal será validada únicamente mediante la constancia de ingreso que se remitirá de forma automática al correo electrónico consignado en su registro.
+        </div>
+
+        <p class="dev">
+            Desarrollado por la Sub Unidad de Tecnologías de la Información.
+        </p>
+
+    </div>
+
+    <!-- DERECHA -->
+    <div class="login-right">
+
+        <div class="login-box">
+
+            <h3>Acceso al Sistema</h3>
+
+            <input placeholder="Número de Documento" />
+            <input placeholder="Contraseña" type="password" />
+
+            <button class="btn-login" @onclick="Ingresar">Ingresar</button>
+
+            <button class="btn-outline">Generar clave</button>
+
+            <button class="btn-outline">Recuperar contraseña</button>
+
+        </div>
+
+        <div class="soporte">
+            <p><strong>Soporte y Consultas</strong></p>
+            <p>📞 (01) 2058030 Anexo 0105</p>
+            <p>🕒 Lunes a Viernes de 8:30 a. m. a 4:30 p. m.</p>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    void Ingresar()
+    {
+        Nav.NavigateTo("/dashboard");
+    }
+}

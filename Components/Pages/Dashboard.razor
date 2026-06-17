@@ -1,0 +1,125 @@
+﻿@page "/dashboard"
+@layout EmptyLayout
+@rendermode InteractiveServer
+
+<div class="dash-container">
+
+    <!-- TOP BAR PROFESIONAL -->
+    <div class="topbar">
+
+        <!-- IZQUIERDA (IDENTIDAD GOBIERNO) -->
+        <div class="gov-left">
+            <img src="img/logo_agrorural.png" class="gov-logo" alt="AgroRural" />
+
+            <div class="gov-title">
+                <span class="gov-ministry">
+                    Programa de Desarrollo Productivo Agrario Rural
+                </span>
+                <span class="gov-system">Mesa de Partes Digital</span>
+            </div>
+        </div>
+
+        <!-- DERECHA (USUARIO) -->
+        <div class="user">
+            👤 Carlos Mora
+           
+            <button @onclick="Salir">Salir</button>
+        </div>
+
+    </div>
+
+    <!-- BIENVENIDA -->
+    <div class="welcome">
+        <h2>Bienvenido, Carlos Mora</h2>
+        <p>Gestione sus trámites de manera rápida, segura y disponible 24/7.</p>
+    </div>
+
+    <!-- TARJETAS -->
+    <div class="cards">
+
+        <div class="card">
+            <h3>📄 Nuevo Trámite</h3>
+            <p>Registre su solicitud en línea</p>
+            <button>Ingresar</button>
+        </div>
+
+        <div class="card secondary">
+            <h3>📊 Seguimiento</h3>
+            <p>Consulte el estado de sus trámites</p>
+            <button>Ver trámites</button>
+        </div>
+
+    </div>
+
+    <!-- TABLA -->
+    <div class="tramites">
+
+        <div class="tramites-header">
+            <h3>Mis Trámites</h3>
+        </div>
+
+        <div class="filtros">
+            <input placeholder="Código de trámite" />
+            <select>
+                <option>Todos</option>
+                <option>Enviado</option>
+                <option>En proceso</option>
+                <option>Finalizado</option>
+                <option>Observado</option>
+            </select>
+            <button>Buscar</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Estado</th>
+                    <th>Código</th>
+                    <th>Asunto</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td><span class="estado enviado">Enviado</span></td>
+                    <td>000123</td>
+                    <td>Solicitud de apoyo agrario</td>
+                    <td>17/06/2026</td>
+                </tr>
+
+                <tr>
+                    <td><span class="estado proceso">En proceso</span></td>
+                    <td>000124</td>
+                    <td>Consulta técnica</td>
+                    <td>16/06/2026</td>
+                </tr>
+
+                <tr>
+                    <td><span class="estado finalizado">Finalizado</span></td>
+                    <td>000125</td>
+                    <td>Entrega de documentación</td>
+                    <td>15/06/2026</td>
+                </tr>
+
+                <tr>
+                    <td><span class="estado observado">Observado</span></td>
+                    <td>000126</td>
+                    <td>Corrección de expediente</td>
+                    <td>14/06/2026</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+@code {
+    [Inject] NavigationManager Nav { get; set; }
+
+    void Salir()
+    {
+        Nav.NavigateTo("/login");
+    }
+}

@@ -1,11 +1,13 @@
 ﻿@page "/inicio/juridica"
 @rendermode InteractiveServer
 
+@using Microsoft.AspNetCore.Components.Forms
+
 <div class="ux-bg">
 
     <div class="ux-container">
 
-        <!-- PROGRESS (mejor uso del existente) -->
+        <!-- PROGRESS -->
         <div class="ux-progress">
             <div class="step @(paso >= 1 ? "active" : "")">Datos</div>
             <div class="step @(paso >= 2 ? "active" : "")">Verificación</div>
@@ -16,49 +18,101 @@
         <!-- CARD -->
         <div class="ux-card-full">
 
+            <!-- PASO 1 -->
             @if (paso == 1)
             {
-                <h2>Datos de la Persona Jurídica</h2>
+                <h2>
+                    Datos de la Persona Jurídica (Pública/Privada)
+                </h2>
 
                 <p class="ux-description">
                     Canal virtual para presentar documentos sin acudir presencialmente.
                 </p>
 
-                <label>Nro. RUC</label>
-                <div class="ux-row">
-                    <input class="ux-input" @bind="ruc" maxlength="11" />
-                    <button class="ux-button" @onclick="ValidarRuc">Validar</button>
+                <!-- EMPRESA -->
+                <div class="ux-grid-3">
+
+                    <div class="ux-field">
+                        <label>Nro. RUC</label>
+                        <input class="ux-input" @bind="ruc" maxlength="11" />
+                    </div>
+
+                    <div class="ux-field" style="justify-content:end;">
+                        <button class="ux-button" @onclick="ValidarRuc">Validar</button>
+                    </div>
+
                 </div>
 
-                <label>Razón Social</label>
-                <input class="ux-input" @bind="razonSocial" readonly />
+                <div class="ux-field">
+                    <label>Razón Social</label>
+                    <input class="ux-input" @bind="razonSocial" readonly />
+                </div>
 
-                <label>Dirección</label>
-                <input class="ux-input" @bind="direccion" />
+                <div class="ux-field">
+                    <label>Dirección</label>
+                    <input class="ux-input" @bind="direccion" />
+                </div>
 
                 <hr />
 
-                <h3>Representante</h3>
+                <!-- REPRESENTANTE -->
+                <h3>Datos del Representante</h3>
 
-                <select class="ux-input" @bind="tipoDoc">
-                    <option value="01">DNI</option>
-                    <option value="02">Carné Extranjería</option>
-                    <option value="03">Pasaporte</option>
-                    <option value="04">Otros</option>
-                </select>
+                <div class="ux-grid-3">
 
-                <input class="ux-input" placeholder="Número documento" @bind="numDoc" />
-                <input class="ux-input" placeholder="Nombres" @bind="nombres" />
-                <input class="ux-input" placeholder="Apellidos" @bind="apellidos" />
-                <input class="ux-input" placeholder="Correo" @bind="correo" />
-                <input class="ux-input" placeholder="Teléfono" @bind="telefono" />
-                <input class="ux-input" placeholder="Cargo" @bind="cargo" />
+                    <div class="ux-field">
+                        <label>Tipo Documento</label>
+                        <select class="ux-input" @bind="tipoDoc">
+                            <option value="01">DNI</option>
+                            <option value="02">Carné Extranjería</option>
+                            <option value="03">Pasaporte</option>
+                            <option value="04">Otros</option>
+                        </select>
+                    </div>
+
+                    <div class="ux-field">
+                        <label>Nro Documento</label>
+                        <input class="ux-input" @bind="numDoc" />
+                    </div>
+
+                </div>
+
+                <div class="ux-grid">
+                    <div class="ux-field">
+                        <label>Nombres</label>
+                        <input class="ux-input" @bind="nombres" />
+                    </div>
+
+                    <div class="ux-field">
+                        <label>Apellidos</label>
+                        <input class="ux-input" @bind="apellidos" />
+                    </div>
+                </div>
+
+                <div class="ux-grid">
+                    <div class="ux-field">
+                        <label>Correo</label>
+                        <input class="ux-input" @bind="correo" />
+                    </div>
+
+                    <div class="ux-field">
+                        <label>Teléfono</label>
+                        <input class="ux-input" @bind="telefono" />
+                    </div>
+                </div>
+
+                <div class="ux-field">
+                    <label>Cargo</label>
+                    <input class="ux-input" @bind="cargo" />
+                </div>
 
                 <div class="ux-actions">
+                    <div></div>
                     <button class="ux-button" @onclick="Siguiente">Siguiente →</button>
                 </div>
             }
 
+            <!-- PASO 2 -->
             @if (paso == 2)
             {
                 <h2>Verificación</h2>
@@ -67,63 +121,83 @@
                     Ingresa el código enviado a tu correo electrónico.
                 </p>
 
-                <input class="ux-input" @bind="codigo" maxlength="6" />
+                <input class="ux-input" @bind="codigo" maxlength="6" placeholder="Código de verificación" />
 
                 <div class="ux-actions">
-                    <button class="ux-button" @onclick="Anterior">← Anterior</button>
+                    <button class="ux-button-outline" @onclick="Anterior">← Anterior</button>
                     <button class="ux-button" @onclick="Siguiente">Siguiente →</button>
                 </div>
             }
 
+            <!-- PASO 3 -->
             @if (paso == 3)
             {
                 <h2>Documento</h2>
 
-                <select class="ux-input" @bind="tipoDocumento">
-                    <option>OFICIO</option>
-                    <option>CARTA</option>
-                    <option>SOLICITUD</option>
-                    <option>OTROS</option>
-                </select>
+                <div class="ux-grid">
+                    <select class="ux-input" @bind="tipoDocumento">
+                        <option>OFICIO</option>
+                        <option>CARTA</option>
+                        <option>SOLICITUD</option>
+                        <option>OTROS</option>
+                    </select>
 
-                <input class="ux-input" placeholder="Nro documento" @bind="numDocumento" />
-                <input type="file" class="ux-input" />
+                    <input class="ux-input" placeholder="Nro documento" @bind="numDocumento" />
+                </div>
+
+                <!-- ARCHIVO -->
+                <p class="ux-help">(Solo PDF - Máx. 25MB)</p>
+
+                <InputFile OnChange="OnFileSelected" accept=".pdf,application/pdf" class="ux-input" />
+
+                @if (archivo != null)
+                {
+                    <p class="ux-success">@archivo.Name</p>
+                }
+                else
+                {
+                    <p class="ux-muted">Sin archivo seleccionado</p>
+                }
+
+                @if (!string.IsNullOrEmpty(error))
+                {
+                    <p class="ux-error">@error</p>
+                }
 
                 <div class="ux-actions">
-                    <button class="ux-button" @onclick="Anterior">← Anterior</button>
+                    <button class="ux-button-outline" @onclick="Anterior">← Anterior</button>
                     <button class="ux-button" @onclick="Siguiente">Confirmar →</button>
                 </div>
             }
 
+            <!-- PASO 4 -->
             @if (paso == 4)
             {
-                <div style="text-align:center">
+                <div class="ux-final">
+                    <div class="ux-success-icon">✔</div>
 
                     <h2>Trámite concluido</h2>
+                    <p>Tu solicitud fue registrada correctamente.</p>
 
-                    <p class="ux-description">
-                        Su solicitud ha sido registrada correctamente.
-                    </p>
-
-                    <button class="ux-button">Aceptar</button>
+                    <button class="ux-button" @onclick="Finish">Aceptar</button>
 
                 </div>
             }
 
         </div>
-
     </div>
-
 </div>
 
 @code {
     private int paso = 1;
 
+    // EMPRESA
     private string ruc;
     private string razonSocial;
     private string direccion;
 
-    private string tipoDoc;
+    // REPRESENTANTE
+    private string tipoDoc = "01";
     private string numDoc;
     private string nombres;
     private string apellidos;
@@ -131,11 +205,20 @@
     private string telefono;
     private string cargo;
 
+    // VERIFICACIÓN
     private string codigo;
 
+    // DOCUMENTO
     private string tipoDocumento;
     private string numDocumento;
+    private IBrowserFile? archivo;
+    private string error = "";
 
+    [Inject] NavigationManager Nav { get; set; }
+    void Finish()
+    {
+        Nav.NavigateTo("/");
+    }
     private void Siguiente()
     {
         if (paso < 4) paso++;
@@ -148,6 +231,30 @@
 
     private void ValidarRuc()
     {
+        // Simulación
         razonSocial = "EMPRESA DEMO S.A.C.";
+    }
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (file.ContentType != "application/pdf" &&
+            !file.Name.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            error = "Solo se permiten archivos PDF.";
+            archivo = null;
+            return;
+        }
+
+        if (file.Size > 25 * 1024 * 1024)
+        {
+            error = "El archivo supera los 25MB.";
+            archivo = null;
+            return;
+        }
+
+        error = "";
+        archivo = file;
     }
 }
