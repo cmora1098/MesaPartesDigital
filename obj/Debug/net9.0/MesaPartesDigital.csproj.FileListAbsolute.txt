@@ -84,5 +84,6 @@ C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\scopedcss\Compone
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\scopedcss\Components\Pages\ConsultaExpediente.razor.rz.scp.css
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\scopedcss\Components\Pages\Login.razor.rz.scp.css
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\scopedcss\Components\Pages\Dashboard.razor.rz.scp.css
-C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\z7ffcz6gus-ghf5m7vj3w.gz
-C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\g2tieop9t1-ghf5m7vj3w.gz
+C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\scopedcss\Components\Layout\Header.razor.rz.scp.css
+C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\z7ffcz6gus-6nqz2kkfwh.gz
+C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\g2tieop9t1-6nqz2kkfwh.gz

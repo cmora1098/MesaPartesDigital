@@ -1,7 +1,5 @@
-﻿@inherits LayoutComponentBase
-@inject NavigationManager Navigation 
- 
-<header class="gov-header">
+﻿
+@* <header class="gov-header">
 
     <div class="gov-container header-content">
 
@@ -38,8 +36,13 @@
 
     </div>
 
-</header>
+</header> *@
 
+@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+
+<Header />
+ 
 <main class="gov-body">
     @Body
 </main>
@@ -79,4 +82,12 @@
     {
         Navigation.NavigateTo("/consulta-expediente");
     }
+
+    private bool menuAbierto = false;
+
+    private void ToggleMenu()
+    {
+        menuAbierto = !menuAbierto;
+    }
+
 }

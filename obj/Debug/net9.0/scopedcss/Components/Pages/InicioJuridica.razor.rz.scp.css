@@ -1,268 +1,268 @@
+
 /* =========================
-   FUENTE GLOBAL
+   RESET / BASE
 ========================= */
+*[b-ehn9wmc07g] {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body[b-ehn9wmc07g] {
-    font-family: 'Segoe UI', 'Inter', sans-serif;
-    background: #f1f5f9;
-    color: #1e293b;
+    font-family: "Segoe UI", sans-serif;
 }
 
 /* =========================
-   FONDO GENERAL (AGREGADO)
+   BACKGROUND
 ========================= */
 .ux-bg[b-ehn9wmc07g] {
     min-height: 100vh;
-    padding: 20px 10px 40px;
-    background: radial-gradient(circle at top left, #dbeafe, transparent 45%), radial-gradient(circle at bottom right, #ede9fe, transparent 45%), #f8fafc;
+    display: flex;
+    justify-content: center;
+    padding: 50px 20px;
+    background: radial-gradient(circle at 10% 10%, rgba(59,130,246,0.15), transparent 40%), radial-gradient(circle at 90% 90%, rgba(124,58,237,0.15), transparent 40%), #f1f5f9;
 }
 
 /* =========================
-   CONTENEDOR
+   CONTAINER
 ========================= */
 .ux-container[b-ehn9wmc07g] {
-    max-width: 950px;
-    margin: 10px auto 40px auto; /* 🔥 SUBE LA BARRA */
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* =========================
+   HEADER
+========================= */
+.ux-header[b-ehn9wmc07g] {
+    text-align: center;
+}
+
+.ux-badge-top[b-ehn9wmc07g] {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    font-size: 11px;
+    margin-bottom: 10px;
+}
+
+.ux-header h1[b-ehn9wmc07g] {
+    font-size: 30px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.ux-description[b-ehn9wmc07g] {
+    font-size: 14px;
+    color: #64748b;
+    max-width: 600px;
+    margin: 8px auto 0;
 }
 
 /* =========================
    CARD
 ========================= */
-.ux-card-full[b-ehn9wmc07g] {
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 18px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+.ux-card-form[b-ehn9wmc07g] {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(14px);
+    padding: 26px;
+    border-radius: 20px;
+    border: 1px solid rgba(148,163,184,0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.03);
+    transition: 0.25s ease;
 }
 
-/* ⚠️ ESTE YA NO SE USA EN FINAL */
-.ux-card-form[b-ehn9wmc07g] {
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(10px);
-    padding: 28px;
-    border-radius: 18px;
-    border: 1px solid rgba(148,163,184,0.2);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-}
+    .ux-card-form:hover[b-ehn9wmc07g] {
+        transform: translateY(-2px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 5px 10px rgba(0,0,0,0.05);
+    }
 
     .ux-card-form h2[b-ehn9wmc07g] {
-        margin-bottom: 10px;
-        color: #0f172a;
+        font-size: 18px;
+        margin-bottom: 8px;
     }
 
 /* =========================
-   TEXTOS
+   TEXT
 ========================= */
-h2[b-ehn9wmc07g] {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 6px;
-}
-
-h3[b-ehn9wmc07g] {
-    margin-top: 25px;
-    margin-bottom: 10px;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.ux-description[b-ehn9wmc07g] {
+.ux-muted[b-ehn9wmc07g] {
     font-size: 13px;
     color: #64748b;
-    margin-bottom: 20px;
 }
-
-/* =========================
-   PROGRESS (MEJOR POSICIÓN)
-========================= */
-.ux-progress[b-ehn9wmc07g] {
-    display: flex;
-    margin-top: 5px;
-    margin-bottom: 25px;
-}
-
-    .ux-progress .step[b-ehn9wmc07g] {
-        flex: 1;
-        text-align: center;
-        font-size: 12px;
-        padding: 10px;
-        color: #94a3b8;
-        border-bottom: 3px solid #e5e7eb;
-    }
-
-        .ux-progress .step.active[b-ehn9wmc07g] {
-            color: #2563eb;
-            font-weight: 600;
-            border-bottom: 3px solid #2563eb;
-        }
 
 /* =========================
    GRID
 ========================= */
-.ux-grid[b-ehn9wmc07g] {
+.ux-grid-form[b-ehn9wmc07g] {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-bottom: 15px;
-}
-
-.ux-grid-3[b-ehn9wmc07g] {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 15px;
+    gap: 14px;
 }
 
 /* =========================
-   CAMPOS
+   FIELD
 ========================= */
 .ux-field[b-ehn9wmc07g] {
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
+    gap: 5px;
 }
 
     .ux-field.full[b-ehn9wmc07g] {
         grid-column: 1 / -1;
     }
 
-/* =========================
-   LABEL
-========================= */
-label[b-ehn9wmc07g] {
-    font-size: 12px;
-    font-weight: 600;
-    color: #334155;
-    margin-bottom: 6px;
-}
+    .ux-field label[b-ehn9wmc07g] {
+        font-size: 11.5px;
+        color: #475569;
+    }
+
+        .ux-field label span[b-ehn9wmc07g] {
+            color: #ef4444;
+        }
 
 /* =========================
    INPUTS
 ========================= */
-.ux-input[b-ehn9wmc07g] {
+input[b-ehn9wmc07g],
+select[b-ehn9wmc07g],
+textarea[b-ehn9wmc07g] {
     width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #d1d5db;
+    padding: 11px 13px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
     font-size: 13px;
-    background-color: #f9fafb;
     transition: all 0.2s ease;
 }
 
-    .ux-input[b-ehn9wmc07g]::placeholder {
-        color: #94a3b8;
+    input:hover[b-ehn9wmc07g],
+    select:hover[b-ehn9wmc07g],
+    textarea:hover[b-ehn9wmc07g] {
+        border-color: #94a3b8;
     }
 
-    .ux-input:hover[b-ehn9wmc07g] {
-        border-color: #9ca3af;
-    }
-
-    .ux-input:focus[b-ehn9wmc07g] {
+    input:focus[b-ehn9wmc07g],
+    select:focus[b-ehn9wmc07g],
+    textarea:focus[b-ehn9wmc07g] {
+        background: white;
         border-color: #2563eb;
-        background-color: #ffffff;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
         outline: none;
     }
 
-/* =========================
-   FILA FLEX
-========================= */
-.ux-row[b-ehn9wmc07g] {
-    display: flex;
-    gap: 10px;
-    align-items: end;
+textarea[b-ehn9wmc07g] {
+    min-height: 100px;
+    resize: vertical;
 }
 
 /* =========================
-   BOTONES
+   BUTTONS
 ========================= */
 .ux-button[b-ehn9wmc07g] {
     background: linear-gradient(135deg, #2563eb, #7c3aed);
     color: white;
     border: none;
-    padding: 12px 22px;
+    padding: 12px 24px;
     border-radius: 999px;
     cursor: pointer;
+    font-size: 13px;
     transition: 0.25s;
 }
 
     .ux-button:hover[b-ehn9wmc07g] {
-        background: #1e40af;
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(30, 64, 175, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(124,58,237,0.35);
     }
 
 .ux-button-outline[b-ehn9wmc07g] {
-    background: transparent;
+    background: white;
     border: 1px solid #cbd5e1;
     padding: 10px 18px;
     border-radius: 999px;
     cursor: pointer;
+    font-size: 13px;
 }
 
     .ux-button-outline:hover[b-ehn9wmc07g] {
-        background: #e0e7ff;
+        border-color: #2563eb;
+        color: #2563eb;
     }
 
 /* =========================
-   MENSAJES
+   FILE
 ========================= */
-.ux-help[b-ehn9wmc07g] {
-    font-size: 12px;
-    color: #64748b;
-    margin: 8px 0;
+.ux-file-section[b-ehn9wmc07g] {
+    margin-top: 15px;
+    padding: 20px;
+    border: 2px dashed #c7d2fe;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+    text-align: center;
 }
 
-.ux-muted[b-ehn9wmc07g] {
+    .ux-file-section:hover[b-ehn9wmc07g] {
+        border-color: #6366f1;
+        background: #eef2ff;
+    }
+
+.ux-file[b-ehn9wmc07g] {
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* =========================
+   ANEXOS
+========================= */
+.ux-anexos[b-ehn9wmc07g] {
+    margin-top: 15px;
+    padding: 18px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+/* =========================
+   STATES
+========================= */
+.ux-success[b-ehn9wmc07g] {
+    color: #16a34a;
     font-size: 12px;
-    color: #94a3b8;
+    margin-top: 6px;
 }
 
 .ux-error[b-ehn9wmc07g] {
     color: #dc2626;
     font-size: 12px;
+    margin-top: 6px;
 }
 
-.ux-success[b-ehn9wmc07g] {
-    color: #16a34a;
+.ux-help[b-ehn9wmc07g] {
     font-size: 12px;
+    color: #64748b;
+    margin-top: 6px;
 }
 
 /* =========================
-   FINAL (🔥 SIN DOBLE CARD)
+   ACTIONS
 ========================= */
-.ux-final[b-ehn9wmc07g] {
-    text-align: center;
-    padding: 40px 20px;
-}
-
-.ux-success-icon[b-ehn9wmc07g] {
-    font-size: 28px;
-    color: #16a34a;
-    margin-bottom: 10px;
-}
-
-.ux-final p[b-ehn9wmc07g] {
-    color: #16a34a;
-    margin-bottom: 20px;
-}
-
-/* =========================
-   ACCIONES
-========================= */
-.ux-actions[b-ehn9wmc07g] {
+.ux-actions[b-ehn9wmc07g],
+.ux-actions-between[b-ehn9wmc07g] {
     display: flex;
     justify-content: space-between;
-    margin-top: 25px;
+    margin-top: 20px;
 }
 
-/* =========================
-   HR
-========================= */
-hr[b-ehn9wmc07g] {
-    margin: 25px 0;
-    border: none;
-    border-top: 1px solid #e5e7eb;
+.ux-actions-right[b-ehn9wmc07g] {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
 }
 
 /* =========================
@@ -270,16 +270,46 @@ hr[b-ehn9wmc07g] {
 ========================= */
 @media (max-width: 768px) {
 
-    .ux-grid[b-ehn9wmc07g],
-    .ux-grid-3[b-ehn9wmc07g] {
+    .ux-grid-form[b-ehn9wmc07g] {
         grid-template-columns: 1fr;
     }
 
-    .ux-row[b-ehn9wmc07g] {
-        flex-direction: column;
+    .ux-card-form[b-ehn9wmc07g] {
+        padding: 20px;
     }
 
-    .ux-button[b-ehn9wmc07g] {
+    .ux-header h1[b-ehn9wmc07g] {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .ux-bg[b-ehn9wmc07g] {
+        padding: 25px 10px;
+    }
+
+    .ux-card-form[b-ehn9wmc07g] {
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .ux-header h1[b-ehn9wmc07g] {
+        font-size: 20px;
+    }
+
+    .ux-description[b-ehn9wmc07g] {
+        font-size: 13px;
+    }
+
+    .ux-actions[b-ehn9wmc07g],
+    .ux-actions-between[b-ehn9wmc07g] {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .ux-button[b-ehn9wmc07g],
+    .ux-button-outline[b-ehn9wmc07g] {
         width: 100%;
     }
 }
