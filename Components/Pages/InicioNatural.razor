@@ -55,7 +55,7 @@
                 {
                     <div class="ux-field ux-field-button full-width">
                         <button class="ux-btn-primary" @onclick="ValidarDatos">
-                            🔍 Validar datos
+                            Validar datos
                         </button>
                     </div>
                 }
@@ -235,6 +235,8 @@
             </p>
 
             <br />
+
+            <div class="ux-table-wrapper">
             <!-- TABLA -->
             <table class="ux-table">
                 <thead>
@@ -262,7 +264,7 @@
 
                                     <button class="btn-delete"
                                             @onclick="() => EliminarArchivo(archivo)">
-                                        🗑
+                                            Eliminar
                                     </button>
                                 </td>
                             </tr>
@@ -278,6 +280,7 @@
                     }
                 </tbody>
             </table>
+            </div>
 
             <hr class="ux-divider" />
 

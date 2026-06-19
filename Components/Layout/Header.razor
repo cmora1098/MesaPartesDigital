@@ -1,5 +1,6 @@
 ﻿@rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject NavigationManager Navigation
 
 <header class="gov-header">
 
@@ -62,4 +63,10 @@
         menuAbierto = false;
         Nav.NavigateTo(url);
     }
+
+    private void ConsultarExpediente()
+    {
+        Navigation.NavigateTo("/consulta-expediente");
+    }
+     
 }

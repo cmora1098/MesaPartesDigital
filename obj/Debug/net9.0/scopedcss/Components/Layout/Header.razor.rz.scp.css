@@ -1,11 +1,183 @@
 /* =========================
    FUENTE GLOBAL
 ========================= */
+/*body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+    margin: 0;*/ /* 🔥 elimina espacio global */
+/*}*/
+
+/* =========================
+   HEADER LIMPIO
+========================= */
+/*.gov-header {
+    background: white;
+    border-bottom: none;*/ /* ❌ quitamos línea azul */
+    /*box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 80px;
+    display: flex;
+    align-items: center;
+}*/
+
+/* =========================
+   CONTENEDOR
+========================= */
+/*.gov-container {
+    max-width: 1400px;
+    margin: 0 auto;*/ /* 🔥 sin separación arriba */
+    /*padding: 0 40px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}*/
+
+/* =========================
+   IZQUIERDA
+========================= */
+/*.gov-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+}
+
+.gov-logo {
+    width: 50px;
+}
+
+.gov-title {
+    display: flex;
+    flex-direction: column;
+}
+
+.gov-ministry {
+    font-size: 12px;
+    color: #0c7c3b;
+}
+
+.gov-system {
+    font-size: 15px;
+    font-weight: 600;
+}*/
+
+/* =========================
+   ESPACIO CENTRAL
+========================= */
+/*.gov-center-space {
+    flex: 1;
+}*/
+
+/* =========================
+   DERECHA
+========================= */
+/*.gov-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    flex: 1;
+}*/
+
+/* =========================
+   BOTONES
+========================= */
+/*.gov-btn-outline,
+.gov-btn-primary {
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+}*/
+
+/* OUTLINE */
+/*.gov-btn-outline {
+    border: 1px solid #cbd5e1;
+    background: white;
+}
+
+    .gov-btn-outline:hover {
+        background: #f1f5f9;
+    }*/
+
+/* PRIMARY */
+/*.gov-btn-primary {
+    background: #2563eb;
+    color: white;
+}*/
+
+/* =========================
+   BOTÓN MOBILE
+========================= */
+/*.gov-menu-btn {
+    display: none;
+    font-size: 26px;
+    background: none;
+    border: none;
+}*/
+
+/* =========================
+   MOBILE (AQUÍ ESTABA TU PROBLEMA)
+========================= */
+/*@media (max-width: 768px) {
+
+    .gov-container {
+        padding: 10px 16px;
+    }
+
+    .gov-center-space {
+        display: none;
+    }
+
+    .gov-menu-btn {
+        display: block;
+    }
+
+    .gov-right {
+        position: absolute;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background: white;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;*/ /* 🔥 MENOS ESPACIO */
+
+        /*border-top: none;*/ /* ❌ quitamos línea azul de aquí también */
+
+        /*box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition: all 0.25s ease;
+    }
+
+        .gov-right.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+    .gov-btn-outline,
+    .gov-btn-primary {
+        width: 100%;
+        text-align: center;
+    }
+}*/
+
+
+/* =========================
+   FUENTE GLOBAL
+========================= */
 body[b-v3y3766j79] {
     font-family: 'Inter', 'Segoe UI', sans-serif;
     background: #f1f5f9;
     color: #1e293b;
-    margin: 0; /* 🔥 elimina espacio global */
+    margin: 0;
 }
 
 /* =========================
@@ -13,7 +185,6 @@ body[b-v3y3766j79] {
 ========================= */
 .gov-header[b-v3y3766j79] {
     background: white;
-    border-bottom: none; /* ❌ quitamos línea azul */
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     position: sticky;
     top: 0;
@@ -28,11 +199,12 @@ body[b-v3y3766j79] {
 ========================= */
 .gov-container[b-v3y3766j79] {
     max-width: 1400px;
-    margin: 0 auto; /* 🔥 sin separación arriba */
+    margin: 0 auto;
     padding: 0 40px;
     display: flex;
     align-items: center;
     width: 100%;
+    box-sizing: border-box;
 }
 
 /* =========================
@@ -47,6 +219,7 @@ body[b-v3y3766j79] {
 
 .gov-logo[b-v3y3766j79] {
     width: 50px;
+    height: auto;
 }
 
 .gov-title[b-v3y3766j79] {
@@ -56,7 +229,8 @@ body[b-v3y3766j79] {
 
 .gov-ministry[b-v3y3766j79] {
     font-size: 12px;
-    color: #64748b;
+    color: #0c7c3b;
+    font-weight: 500;
 }
 
 .gov-system[b-v3y3766j79] {
@@ -72,7 +246,7 @@ body[b-v3y3766j79] {
 }
 
 /* =========================
-   DERECHA
+   DERECHA (MENÚ)
 ========================= */
 .gov-right[b-v3y3766j79] {
     display: flex;
@@ -83,32 +257,47 @@ body[b-v3y3766j79] {
 }
 
 /* =========================
-   BOTONES
+   ESTILOS DE BOTONES BASE (OPCIÓN 1)
 ========================= */
 .gov-btn-outline[b-v3y3766j79],
 .gov-btn-primary[b-v3y3766j79] {
-    padding: 10px;
-    border-radius: 12px;
+    padding: 10px 18px;
+    border-radius: 8px;
     font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
     border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    white-space: nowrap;
 }
 
-/* OUTLINE */
+/* OUTLINE TRANSFORMAR EN ENLACES SUTILES */
 .gov-btn-outline[b-v3y3766j79] {
-    border: 1px solid #cbd5e1;
-    background: white;
+    background: transparent;
+    color: #475569;
 }
 
     .gov-btn-outline:hover[b-v3y3766j79] {
-        background: #f1f5f9;
+        color: #0c7c3b;
+        background: #f0fdf4; /* Fondo verde muy suave */
     }
 
-/* PRIMARY */
+/* BOTÓN DE ACCIÓN PRINCIPAL INSTITUCIONAL */
 .gov-btn-primary[b-v3y3766j79] {
-    background: #2563eb;
+    background: #0c7c3b; /* Verde Agro Rural */
     color: white;
+    box-shadow: 0 2px 4px rgba(12, 124, 59, 0.15);
 }
+
+    .gov-btn-primary:hover[b-v3y3766j79] {
+        background: #09632f;
+        box-shadow: 0 4px 12px rgba(12, 124, 59, 0.3);
+    }
 
 /* =========================
    BOTÓN MOBILE
@@ -118,15 +307,16 @@ body[b-v3y3766j79] {
     font-size: 26px;
     background: none;
     border: none;
+    cursor: pointer;
+    color: #1e293b;
 }
 
 /* =========================
-   MOBILE (AQUÍ ESTABA TU PROBLEMA)
+   DISEÑO RESPONSIVO (MOBILE)
 ========================= */
 @media (max-width: 768px) {
-
     .gov-container[b-v3y3766j79] {
-        padding: 10px 16px;
+        padding: 0 20px;
     }
 
     .gov-center-space[b-v3y3766j79] {
@@ -144,16 +334,14 @@ body[b-v3y3766j79] {
         width: 100%;
         background: white;
         flex-direction: column;
-        gap: 12px;
-        padding: 16px; /* 🔥 MENOS ESPACIO */
-
-        border-top: none; /* ❌ quitamos línea azul de aquí también */
-
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        gap: 8px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
         opacity: 0;
         transform: translateY(-10px);
         pointer-events: none;
         transition: all 0.25s ease;
+        box-sizing: border-box;
     }
 
         .gov-right.show[b-v3y3766j79] {
@@ -166,5 +354,10 @@ body[b-v3y3766j79] {
     .gov-btn-primary[b-v3y3766j79] {
         width: 100%;
         text-align: center;
+        padding: 12px;
+    }
+
+    .gov-btn-outline[b-v3y3766j79] {
+        background: #f8fafc;
     }
 }
