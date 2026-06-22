@@ -135,7 +135,7 @@
 
             <div class="ux-grid-form">
 
-                <div class="ux-field">
+                @* <div class="ux-field">
                     <label>Tipo de Documento *</label>
                     <select>
                         <option>--SELECCIONAR--</option>
@@ -145,6 +145,20 @@
                         <option>Oficio</option>
                         <option>Resoluciones</option>
                         <option>Otros</option>
+                    </select>
+                </div> *@
+
+                <div class="ux-field">
+                    <label>Tipo de Documento *</label>
+                    <select @bind="idTipoDocSeleccionado">
+                        <option value="0">--SELECCIONAR--</option>
+                        @if (listaTiposDocumento != null)
+                        {
+                            @foreach (var doc in listaTiposDocumento.Where(d => d.BActivo))
+                            {
+                                <option value="@doc.ICodTipoDoc">@doc.VNombreTipoDoc</option>
+                            }
+                        }
                     </select>
                 </div>
 
@@ -289,7 +303,7 @@
     </div>
 
 </div>
-
+@* 
 @code {
 
     [Inject] NavigationManager Nav { get; set; }
@@ -457,4 +471,205 @@
     }
 
 
-}
+} *@
+
+@code {
+    // =================================================================
+    // 💾 INYECCIÓN DE SERVICIOS Y CONTEXTO
+    // =================================================================
+    [Inject] private MesaPartesDigital.Services.TipoDocumentoService TipoDocService { get; set; } = default!;
+    [Inject] private NavigationManager Nav { get; set; } = default!;
+
+    // =================================================================
+    // 📑 DATOS DESDE LA BASE DE DATOS (PROBANDO TRAÍDA)
+    // =================================================================
+    private List<MesaPartesDigital.Models.TipoDocumento>? listaTiposDocumento;
+    private int idTipoDocSeleccionado = 0; // Almacenará el iCodTipoDoc seleccionado (1, 2, 3, etc.)
+
+    // =================================================================
+    // 🏢 SECCIÓN I: DATOS DE LA EMPRESA
+    // =================================================================
+    private string rucInputValue = "";
+    private string razonSocialValue = "";
+
+    // =================================================================
+    // 👤 SECCIÓN II: DATOS DEL REPRESENTANTE LEGAL
+    // =================================================================
+    private string repTipoDocumento = "DNI";
+    private string repNumeroDocumento = "";
+    private string repErrorDocumento = "";
+    private string repApellidoPaterno = "";
+    private string repApellidoMaterno = "";
+    private string repNombres = "";
+    private string repTelefono = "";
+    private string repCorreo = "";
+    private bool repCamposBloqueados = true;
+
+    // =================================================================
+    // 📁 SECCIÓN III & ADJUNTOS: DOCUMENTOS Y ANEXOS
+    // =================================================================
+    private IBrowserFile? archivo;
+    private string? pdfPreviewUrl;
+    private List<ArchivoAdjunto> archivos = new(); // Corregido usando la Opción 1
+    private string error = "";
+    private string urlArchivo = "";
+    private bool mostrarUrl = false;
+
+    // =================================================================
+    // 🔄 CICLO DE VIDA DEL COMPONENTE
+    // =================================================================
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Carga de forma reactiva los tipos de documento activos al renderizar
+            listaTiposDocumento = await TipoDocService.ObtenerTiposDocumentoAsync();
+        }
+        catch (Exception ex)
+        {
+            error = "Error de conexión: No se pudieron cargar los tipos de documentos de la BD.";
+        }
+    }
+
+    // =================================================================
+    // ⚙️ MÉTODOS DE LA EMPRESA Y ACCIONES GENERALES
+    // =================================================================
+    private async Task ValidarRuc()
+    {
+        if (string.IsNullOrWhiteSpace(rucInputValue))
+        {
+            razonSocialValue = "RUC Inválido";
+            return;
+        }
+
+        razonSocialValue = "Buscando...";
+        await Task.Delay(800);
+
+        if (rucInputValue == "20123456789")
+        {
+            razonSocialValue = "EMPRESA DE PRUEBA S.A.C.";
+        }
+        else
+        {
+            razonSocialValue = $"EMPRESA ASOCIADA AL RUC {rucInputValue}";
+        }
+    }
+
+    private void Finalizar()
+    {
+        Nav.NavigateTo("/");
+    }
+
+    // =================================================================
+    // ⚙️ MÉTODOS DEL REPRESENTANTE LEGAL
+    // =================================================================
+    private void OnRepTipoDocumentoChange()
+    {
+        repNumeroDocumento = "";
+        repErrorDocumento = "";
+        repApellidoPaterno = "";
+        repApellidoMaterno = "";
+        repNombres = "";
+
+        repCamposBloqueados = (repTipoDocumento == "DNI");
+    }
+
+    private async Task ValidarRepDni()
+    {
+        repErrorDocumento = "";
+
+        if (string.IsNullOrWhiteSpace(repNumeroDocumento) || repNumeroDocumento.Length != 8)
+        {
+            repErrorDocumento = "El DNI debe tener 8 dígitos.";
+            return;
+        }
+
+        repNombres = "Buscando...";
+        repApellidoPaterno = "...";
+        repApellidoMaterno = "...";
+
+        await Task.Delay(900);
+
+        if (repNumeroDocumento == "44445555")
+        {
+            repApellidoPaterno = "PÉREZ";
+            repApellidoMaterno = "GARCÍA";
+            repNombres = "JUAN CARLOS";
+        }
+        else
+        {
+            repApellidoPaterno = "MENDOZA";
+            repApellidoMaterno = "CASTRO";
+            repNombres = "MARÍA ELENA";
+        }
+    }
+
+    // =================================================================
+    // 📄 GESTIÓN DE ARCHIVOS Y COMPORTAMIENTO UI
+    // =================================================================
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        error = "";
+        archivo = e.File;
+
+        if (archivo == null)
+            return;
+
+        if (archivo.ContentType != "application/pdf")
+        {
+            error = "Solo PDF.";
+            archivo = null;
+            pdfPreviewUrl = null;
+            return;
+        }
+
+        var stream = archivo.OpenReadStream(25 * 1024 * 1024);
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+
+        var base64 = Convert.ToBase64String(ms.ToArray());
+        pdfPreviewUrl = $"data:application/pdf;base64,{base64}";
+    }
+
+    private async Task HandleFilesSelected(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles(10))
+        {
+            if (file.Size > 20 * 1024 * 1024)
+                continue;
+
+            var ext = Path.GetExtension(file.Name).ToLower();
+            var permitidos = new[] { ".pdf", ".docx", ".xlsx", ".ppt", ".jpg", ".png", ".zip" };
+
+            if (!permitidos.Contains(ext))
+                continue;
+
+            archivos.Add(new ArchivoAdjunto
+            {
+                Nombre = file.Name,
+                Tipo = ext,
+                Tamano = $"{file.Size / 1024} KB"
+            });
+        }
+    }
+
+    private void EliminarArchivo(ArchivoAdjunto archivoAdjunto)
+    {
+        archivos.Remove(archivoAdjunto);
+    }
+
+    private void ToggleUrl()
+    {
+        mostrarUrl = !mostrarUrl;
+    }
+
+    // =================================================================
+    // 🏗️ ESTRUCTURAS DE DATOS LOCALES
+    // =================================================================
+    public class ArchivoAdjunto
+    {
+        public string Nombre { get; set; } = string.Empty;
+        public string Tipo { get; set; } = string.Empty;
+        public string Tamano { get; set; } = string.Empty;
+    }
+}   

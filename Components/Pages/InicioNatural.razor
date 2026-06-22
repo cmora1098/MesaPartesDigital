@@ -28,10 +28,8 @@
                 <div class="ux-field">
                     <label>Tipo de Documento *</label>
                     <select @bind="tipoDocumento" @bind:after="OnTipoDocumentoChange">
-                        <option value="DNI">DNI</option>
-                        <option value="RUC">RUC</option>
-                        <option value="CE">Carnet de Extranjería</option>
-                        <option value="PAS">Pasaporte</option>
+                        <option value="1" selected>DNI</option>                        
+                        <option value="3">CE (Carnet de Extranjería)</option>
                     </select>
                 </div>
 
@@ -39,7 +37,7 @@
                     <label>Nro. Documento *</label>
                     <input @bind="numeroDocumento"
                            @bind:after="ValidarDocumento"
-                           maxlength="@(tipoDocumento == "DNI" ? "8" : "20")" />
+                           maxlength="@(tipoDocumento == "1" ? "8" : "10")" />
 
                     @if (!string.IsNullOrEmpty(errorDocumento))
                     {
@@ -51,7 +49,7 @@
                     🔍 Validar datos
                 </button> *@
 
-                @if (tipoDocumento == "DNI")
+                @if (tipoDocumento == "1")
                 {
                     <div class="ux-field ux-field-button full-width">
                         <button class="ux-btn-primary" @onclick="ValidarDatos">
@@ -74,7 +72,7 @@
                     <label>Nombres *</label>
                     <input @bind="nombres" disabled="@bloquearDatos" />
                 </div>
-                 
+
                 <div class="ux-field">
                     <label>Teléfono *</label>
                     <input />
@@ -168,7 +166,7 @@
         <div class="ux-card-form">
 
             <h2>Documento adjunto</h2>
-             
+
             <!-- INPUT OCULTO -->
             <InputFile OnChange="OnFileSelected"
                        accept=".pdf"
@@ -222,7 +220,7 @@
             <h2>Anexos</h2>
 
             <!-- BOTÓN -->
-          
+
 
             <InputFile id="fileUploadMulti"
                        OnChange="HandleFilesSelected"
@@ -237,49 +235,49 @@
             <br />
 
             <div class="ux-table-wrapper">
-            <!-- TABLA -->
-            <table class="ux-table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Tipo</th>
-                        <th>Tamaño</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (archivos.Any())
-                    {
-                        @foreach (var archivo in archivos)
+                <!-- TABLA -->
+                <table class="ux-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Tamaño</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (archivos.Any())
                         {
-                            <tr>
-                                <td>@archivo.Nombre</td>
-                                <td>@archivo.Tipo</td>
-                                <td>@archivo.Tamano</td>
-                                <td>
-                                    @* <button class="btn-preview"
+                            @foreach (var archivo in archivos)
+                            {
+                                <tr>
+                                    <td>@archivo.Nombre</td>
+                                    <td>@archivo.Tipo</td>
+                                    <td>@archivo.Tamano</td>
+                                    <td>
+                                        @* <button class="btn-preview"
                                             @onclick="() => PreviewArchivo(archivo)">
                                         👁
                                     </button> *@
 
-                                    <button class="btn-delete"
-                                            @onclick="() => EliminarArchivo(archivo)">
+                                        <button class="btn-delete"
+                                                @onclick="() => EliminarArchivo(archivo)">
                                             Eliminar
-                                    </button>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="ux-empty">
+                                    No hay archivos cargados
                                 </td>
                             </tr>
                         }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="4" class="ux-empty">
-                                No hay archivos cargados
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
             </div>
 
             <hr class="ux-divider" />
@@ -314,12 +312,10 @@
                 </div>
             </div>
         }
-        
+
         <!-- ===================== -->
         <!-- FINAL -->
         <!-- ===================== -->
-
-       
         @* <div class="ux-card-form ux-success">
 
             <h2>Finalizar Registro</h2>
@@ -335,7 +331,7 @@
 </div>
 
 @code {
-    private string tipoDocumento = "DNI";
+    private string tipoDocumento = "1";
     private string numeroDocumento = "";
 
     private string apellidoPaterno = "";
@@ -349,11 +345,22 @@
     {
         errorDocumento = "";
 
-        if (tipoDocumento == "DNI")
+        if (tipoDocumento == "1") // DNI
         {
             if (numeroDocumento.Length != 8 || !numeroDocumento.All(char.IsDigit))
             {
-                errorDocumento = "El DNI debe tener 8 dígitos numéricos.";
+                errorDocumento = "El DNI debe tener exactamente 8 dígitos numéricos.";
+            }
+        }
+        else if (tipoDocumento == "3") // CE
+        {
+            if (numeroDocumento.Length > 10)
+            {
+                errorDocumento = "El Carnet de Extranjería (CE) no puede superar los 10 caracteres.";
+            }
+            else if (string.IsNullOrWhiteSpace(numeroDocumento))
+            {
+                errorDocumento = "El número de documento es obligatorio.";
             }
         }
     }
@@ -362,7 +369,7 @@
     {
         errorDocumento = "";
 
-        if (tipoDocumento == "DNI")
+        if (tipoDocumento == "1")
         {
             if (numeroDocumento.Length != 8 || !numeroDocumento.All(char.IsDigit))
             {
@@ -377,9 +384,15 @@
 
             bloquearDatos = true;
         }
-        else
+        else if (tipoDocumento == "3") // CE
         {
-            // Otros documentos → editable
+            if (string.IsNullOrWhiteSpace(numeroDocumento) || numeroDocumento.Length > 10)
+            {
+                errorDocumento = "CE inválido. Debe tener como máximo 10 caracteres.";
+                return;
+            }
+
+            // Para extranjeros el flujo no consume RENIEC, por ende se desbloquean los inputs
             bloquearDatos = false;
 
             apellidoPaterno = "";
@@ -397,7 +410,7 @@
         apellidoMaterno = "";
         nombres = "";
 
-        bloquearDatos = tipoDocumento == "DNI";
+        bloquearDatos = tipoDocumento == "1";
     }
 
     [Inject] NavigationManager Nav { get; set; }
@@ -553,5 +566,5 @@
 
     private string? previewUrl;
 
-   
+
 }
