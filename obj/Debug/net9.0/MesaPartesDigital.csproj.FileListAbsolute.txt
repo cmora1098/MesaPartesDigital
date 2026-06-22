@@ -87,5 +87,7 @@ C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\scopedcss\Compone
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\scopedcss\Components\Layout\Header.razor.rz.scp.css
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\scopedcss\Components\Pages\Home.razor.rz.scp.css
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\scopedcss\Components\Layout\Footer.razor.rz.scp.css
-C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\z7ffcz6gus-vcc0xtrsky.gz
-C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\g2tieop9t1-vcc0xtrsky.gz
+C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\scopedcss\Components\Pages\TramiteJuridicaInterno.razor.rz.scp.css
+C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\scopedcss\Components\Pages\TramiteNaturalInterno.razor.rz.scp.css
+C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\z7ffcz6gus-vbft4l186o.gz
+C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\g2tieop9t1-vbft4l186o.gz

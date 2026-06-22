@@ -87,3 +87,11 @@ build_metadata.AdditionalFiles.CssScope = b-l1s7fg4eyt
 [C:/Users/cmora/source/repos/MesaPartesDigital/Components/Pages/Login.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xMb2dpbi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-33jr91t10f
+
+[C:/Users/cmora/source/repos/MesaPartesDigital/Components/Pages/TramiteJuridicaInterno.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xUcmFtaXRlSnVyaWRpY2FJbnRlcm5vLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-fbj5i9km29
+
+[C:/Users/cmora/source/repos/MesaPartesDigital/Components/Pages/TramiteNaturalInterno.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xUcmFtaXRlTmF0dXJhbEludGVybm8ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-nyzs8h87xu

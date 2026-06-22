@@ -4,13 +4,11 @@
 
 <div class="dash-container">
 
-    <!-- TOP BAR PROFESIONAL -->
-    <div class="topbar">
-
-        <!-- IZQUIERDA (IDENTIDAD GOBIERNO) -->
+    <!-- TOPBAR INSTITUCIONAL: Permanece fija y visible durante todo el flujo del usuario logeado -->
+    <header class="topbar">
         <div class="gov-left">
-            <img src="img/logo_agrorural.png" class="gov-logo" alt="AgroRural" />
-
+            <img src="img/logo_agrorural.png" class="gov-logo" alt="Logo AgroRural" />
+            <div class="gov-divider" aria-hidden="true"></div>
             <div class="gov-title">
                 <span class="gov-ministry">
                     Programa de Desarrollo Productivo Agrario Rural
@@ -19,104 +17,213 @@
             </div>
         </div>
 
-        <!-- DERECHA (USUARIO) -->
-        <div class="user">
-            👤 Carlos Mora
-           
-            <button @onclick="Salir">Salir</button>
+        <div class="user-menu">
+            <div class="user-info">
+                <span class="user-avatar" aria-hidden="true">👤</span>
+                <span class="user-name">Carlos Mora</span>
+            </div>
+            <button class="btn-logout" @onclick="Salir" title="Cerrar sesión">
+                <span>Salir</span>
+                <span class="logout-icon">➔</span>
+            </button>
         </div>
+    </header>
 
-    </div>
+    <main class="dash-content">
 
-    <!-- BIENVENIDA -->
-    <div class="welcome">
-        <h2>Bienvenido, Carlos Mora</h2>
-        <p>Gestione sus trámites de manera rápida, segura y disponible 24/7.</p>
-    </div>
+        @if (pasoActual == "historial")
+        {
+            <!-- ==========================================================================
+               PASO 1: DASHBOARD PRINCIPAL (HISTORIAL Y ACCIONES)
+               ========================================================================== -->
+            <section class="welcome-section" aria-labelledby="welcome-title">
+                <h2 id="welcome-title">Bienvenido, Carlos Mora</h2>
+                <p>Gestione sus trámites de manera rápida, segura y disponible las 24 horas.</p>
+            </section>
 
-    <!-- TARJETAS -->
-    <div class="cards">
+            <section class="cards-grid" aria-label="Acciones principales">
+                <div class="action-card card-primary">
+                    <div class="card-body">
+                        <span class="card-icon">📄</span>
+                        <h3>Nuevo Trámite</h3>
+                        <p>Registre e ingrese una nueva solicitud o expediente en línea.</p>
+                    </div>
+                    <button class="btn-card" @onclick='() => CambiarPaso("selector")'>Iniciar Registro</button>
+                </div>
 
-        <div class="card">
-            <h3>📄 Nuevo Trámite</h3>
-            <p>Registre su solicitud en línea</p>
-            <button>Ingresar</button>
-        </div>
+                <div class="action-card card-secondary">
+                    <div class="card-body">
+                        <span class="card-icon">📊</span>
+                        <h3>Seguimiento</h3>
+                        <p>Consulte el estado en tiempo real de sus trámites enviados.</p>
+                    </div>
+                    <button class="btn-card">Ver Mis Trámites</button>
+                </div>
+            </section>
 
-        <div class="card secondary">
-            <h3>📊 Seguimiento</h3>
-            <p>Consulte el estado de sus trámites</p>
-            <button>Ver trámites</button>
-        </div>
+            <section class="tramites-panel">
+                <div class="tramites-header">
+                    <h3>Historial de Trámites</h3>
+                    <span class="badge-count">4 registrados</span>
+                </div>
 
-    </div>
+                <div class="filtros-container">
+                    <div class="filtro-item">
+                        <input type="text" placeholder="Buscar por código..." aria-label="Código de trámite" />
+                    </div>
+                    <div class="filtro-item">
+                        <select aria-label="Filtrar por estado">
+                            <option value="todos">Todos los estados</option>
+                            <option value="enviado">Enviado</option>
+                            <option value="proceso">En proceso</option>
+                            <option value="finalizado">Finalizado</option>
+                            <option value="observado">Observado</option>
+                        </select>
+                    </div>
+                    <button class="btn-buscar">Filtrar Historial</button>
+                </div>
 
-    <!-- TABLA -->
-    <div class="tramites">
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 140px;">Estado</th>
+                                <th scope="col" style="width: 120px;">Código</th>
+                                <th scope="col">Asunto / Expediente</th>
+                                <th scope="col" style="width: 140px; text-align: right;">Fecha Envío</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="estado enviado">Enviado</span></td>
+                                <td class="txt-bold">000123</td>
+                                <td>Solicitud de apoyo agrario para sector norte</td>
+                                <td class="txt-date">17/06/2026</td>
+                            </tr>
+                            <tr>
+                                <td><span class="estado proceso">En proceso</span></td>
+                                <td class="txt-bold">000124</td>
+                                <td>Consulta técnica sobre canales de regadío</td>
+                                <td class="txt-date">16/06/2026</td>
+                            </tr>
+                            <tr>
+                                <td><span class="estado finalizado">Finalizado</span></td>
+                                <td class="txt-bold">000125</td>
+                                <td>Entrega de documentación de personería jurídica</td>
+                                <td class="txt-date">15/06/2026</td>
+                            </tr>
+                            <tr>
+                                <td><span class="estado observado">Observado</span></td>
+                                <td class="txt-bold">000126</td>
+                                <td>Corrección de expediente de linderos marítimos</td>
+                                <td class="txt-date">14/06/2026</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        }
+        else if (pasoActual == "selector")
+        {
+            <!-- ==========================================================================
+               PASO 2: SELECCIÓN DE TIPO DE PERSONA
+               ========================================================================= -->
+            <div class="ux-bg">
+                <div class="ux-container">
+                    <div class="ux-hero">
+                        <div class="ux-badge-top">Mesa de Partes Digital</div>
+                        <p class="ux-description">
+                            Selecciona cómo deseas realizar tus trámites. Esto nos ayudará a personalizar tu experiencia.
+                        </p>
+                    </div>
 
-        <div class="tramites-header">
-            <h3>Mis Trámites</h3>
-        </div>
+                    <div class="ux-grid">
+                        <div class="ux-card @(tipoPersona == "natural" ? "active" : "")" @onclick="SeleccionarNatural">
+                            <div class="ux-icon-circle">👤</div>
+                            <h3>Persona Natural</h3>
+                            <p>Ciudadanos que realizan trámites personales o individuales.</p>
+                            @if (tipoPersona == "natural")
+                            {
+                                <div class="ux-selected">✔ Seleccionado</div>
+                            }
+                        </div>
 
-        <div class="filtros">
-            <input placeholder="Código de trámite" />
-            <select>
-                <option>Todos</option>
-                <option>Enviado</option>
-                <option>En proceso</option>
-                <option>Finalizado</option>
-                <option>Observado</option>
-            </select>
-            <button>Buscar</button>
-        </div>
+                        <div class="ux-card @(tipoPersona == "juridica" ? "active" : "")" @onclick="SeleccionarJuridica">
+                            <div class="ux-icon-circle">🏢</div>
+                            <h3>Persona Jurídica</h3>
+                            <p>Empresas, instituciones o entidades públicas/privadas.</p>
+                            @if (tipoPersona == "juridica")
+                            {
+                                <div class="ux-selected">✔ Seleccionado</div>
+                            }
+                        </div>
+                    </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Estado</th>
-                    <th>Código</th>
-                    <th>Asunto</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr>
-                    <td><span class="estado enviado">Enviado</span></td>
-                    <td>000123</td>
-                    <td>Solicitud de apoyo agrario</td>
-                    <td>17/06/2026</td>
-                </tr>
-
-                <tr>
-                    <td><span class="estado proceso">En proceso</span></td>
-                    <td>000124</td>
-                    <td>Consulta técnica</td>
-                    <td>16/06/2026</td>
-                </tr>
-
-                <tr>
-                    <td><span class="estado finalizado">Finalizado</span></td>
-                    <td>000125</td>
-                    <td>Entrega de documentación</td>
-                    <td>15/06/2026</td>
-                </tr>
-
-                <tr>
-                    <td><span class="estado observado">Observado</span></td>
-                    <td>000126</td>
-                    <td>Corrección de expediente</td>
-                    <td>14/06/2026</td>
-                </tr>
-            </tbody>
-        </table>
-
-    </div>
-
+                    <div class="ux-actions">
+                        <button type="button" class="ux-button-secondary" @onclick='() => CambiarPaso("historial")'>
+                            ← Volver al Historial
+                        </button>
+                        <button type="button" class="ux-button @(string.IsNullOrEmpty(tipoPersona) ? "disabled" : "")"
+                                @onclick="Continuar"
+                                disabled="@string.IsNullOrEmpty(tipoPersona)">
+                            Continuar →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (pasoActual == "formulario_natural")
+        {
+            <!-- ==========================================================================
+               PASO 3 (NATURAL AUTENTICADO): Carga tu nuevo archivo exclusivo de sesión
+               ========================================================================== -->
+            <div class="form-wrapper">
+                <button class="ux-button-secondary btn-back-form" @onclick='() => CambiarPaso("selector")'>← Cambiar tipo de persona</button>
+                <TramiteNaturalInterno />
+            </div>
+        }
+        else if (pasoActual == "formulario_juridica")
+        {
+            <!-- ==========================================================================
+               PASO 3 (JURÍDICA AUTENTICADO): Carga tu nuevo archivo exclusivo de sesión
+               ========================================================================== -->
+            <div class="form-wrapper">
+                <button class="ux-button-secondary btn-back-form" @onclick='() => CambiarPaso("selector")'>← Cambiar tipo de persona</button>
+                <TramiteJuridicaInterno />
+            </div>
+        }
+    </main>
 </div>
 
 @code {
-    [Inject] NavigationManager Nav { get; set; }
+    [Inject] NavigationManager Nav { get; set; } = default!;
+
+    private string pasoActual = "historial";
+    private string tipoPersona = string.Empty;
+
+    private void CambiarPaso(string nuevoPaso)
+    {
+        pasoActual = nuevoPaso;
+        if (nuevoPaso == "historial")
+        {
+            tipoPersona = string.Empty;
+        }
+    }
+
+    private void SeleccionarNatural() => tipoPersona = "natural";
+    private void SeleccionarJuridica() => tipoPersona = "juridica";
+
+    private void Continuar()
+    {
+        if (tipoPersona == "natural")
+        {
+            pasoActual = "formulario_natural";
+        }
+        else if (tipoPersona == "juridica")
+        {
+            pasoActual = "formulario_juridica";
+        }
+    }
 
     void Salir()
     {

@@ -1,0 +1,554 @@
+﻿@page "/inicio/natural"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Components.Forms
+
+<div class="ux-bg">
+
+    <div class="ux-container">
+
+        <!-- HEADER -->
+        <div class="ux-header">
+            <div class="ux-badge-top">Mesa de Partes Digital</div>
+            <h1>Persona Natural</h1>
+            <p class="ux-description">
+                Completa todos los campos para registrar tu documento.
+            </p>
+        </div>
+
+        <!-- ===================== -->
+        <!-- DATOS PERSONALES -->
+        <!-- ===================== -->
+        <div class="ux-card-form">
+
+            <h2>I. DATOS DEL REMITENTE</h2>
+
+            <div class="ux-grid-form">
+
+                <div class="ux-field">
+                    <label>Tipo de Documento *</label>
+                    <select @bind="tipoDocumento" @bind:after="OnTipoDocumentoChange">
+                        <option value="DNI">DNI</option>
+                        <option value="RUC">RUC</option>
+                        <option value="CE">Carnet de Extranjería</option>
+                        <option value="PAS">Pasaporte</option>
+                    </select>
+                </div>
+
+                <div class="ux-field">
+                    <label>Nro. Documento *</label>
+                    <input @bind="numeroDocumento"
+                           @bind:after="ValidarDocumento"
+                           maxlength="@(tipoDocumento == "DNI" ? "8" : "20")" />
+
+                    @if (!string.IsNullOrEmpty(errorDocumento))
+                    {
+                        <span class="ux-error">@errorDocumento</span>
+                    }
+                </div>
+
+                @* <button class="ux-btn-primary" @onclick="ValidarDatos" disabled="@(!string.IsNullOrEmpty(errorDocumento))">
+                    🔍 Validar datos
+                </button> *@
+
+                @if (tipoDocumento == "DNI")
+                {
+                    <div class="ux-field ux-field-button full-width">
+                        <button class="ux-btn-primary" @onclick="ValidarDatos">
+                            Validar datos
+                        </button>
+                    </div>
+                }
+
+                <div class="ux-field">
+                    <label>Apellido Paterno *</label>
+                    <input @bind="apellidoPaterno" disabled="@bloquearDatos" />
+                </div>
+
+                <div class="ux-field">
+                    <label>Apellido Materno *</label>
+                    <input @bind="apellidoMaterno" disabled="@bloquearDatos" />
+                </div>
+
+                <div class="ux-field">
+                    <label>Nombres *</label>
+                    <input @bind="nombres" disabled="@bloquearDatos" />
+                </div>
+
+                <div class="ux-field">
+                    <label>Teléfono *</label>
+                    <input />
+                </div>
+
+                <div class="ux-field">
+                    <label>Correo *</label>
+                    <input type="email" />
+                </div>
+
+                <div class="ux-field">
+                    <label>Dirección *</label>
+                    <input placeholder="Ej: Av. Arequipa 123, Dpto. 402, Urb. San Felipe" />
+                    <small class="ux-help">
+                        Ingrese vía, número, interior/departamento, urbanización o AA.HH.
+                    </small>
+                </div>
+
+
+            </div>
+
+        </div>
+
+        @* <!-- ===================== -->
+        <!-- VERIFICACIÓN -->
+        <!-- ===================== -->
+        <div class="ux-card-form">
+
+            <h2>Verificación</h2>
+            <p class="ux-muted">Código enviado al correo</p>
+
+            <input class="ux-input-code" placeholder="Código de verificación" />
+
+        </div> *@
+
+        <!-- ===================== -->
+        <!-- DOCUMENTO -->
+        <!-- ===================== -->
+        <div class="ux-card-form">
+
+            <h2>II. DATOS DEL DOCUMENTO</h2>
+
+            <div class="ux-grid-form">
+
+                <div class="ux-field">
+                    <label>Tipo de Documento *</label>
+                    <select>
+                        <option>--SELECCIONAR--</option>
+                        <option>Informe</option>
+                        <option>Memo</option>
+                        <option>Carta</option>
+                        <option>Oficio</option>
+                        <option>Resoluciones</option>
+                        <option>Otros</option>
+                    </select>
+                </div>
+
+                <div class="ux-field">
+                    <label>Nro Documento *</label>
+                    <input />
+                </div>
+
+                <div class="ux-field">
+                    <label>Folio *</label>
+                    <input />
+                </div>
+
+                <div class="ux-field">
+                    <label>Fecha del Documento *</label>
+                    <input type="date" />
+                </div>
+
+                <div class="ux-field full">
+                    <label>Sumilla *</label>
+                    <textarea maxlength="255"></textarea>
+                </div>
+
+                <div class="ux-field full">
+                    <label>Referencia</label>
+                    <input />
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===================== -->
+        <!-- ARCHIVO -->
+        <!-- ===================== -->
+
+        <div class="ux-card-form">
+
+            <h2>Documento adjunto</h2>
+
+            <!-- INPUT OCULTO -->
+            <InputFile OnChange="OnFileSelected"
+                       accept=".pdf"
+                       id="fileUpload"
+                       class="hidden-input" />
+
+            <!-- 🔽 TEXTO DE AYUDA -->
+            <p class="ux-file-hint">
+                (Peso máximo: 50MB. Solo se permite archivos en formato PDF)
+            </p>
+
+            @if (archivo != null)
+            {
+                <div class="ux-file-info">
+                    ✅ <span>@archivo.Name</span>
+                </div>
+
+                <!-- PREVISUALIZACIÓN -->
+                <div class="ux-pdf-preview">
+                    <iframe src="@pdfPreviewUrl"></iframe>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(error))
+            {
+                <p class="ux-error">@error</p>
+            }
+
+            <!-- BOTÓN URL -->
+            <br />
+            <button type="button"
+                    class="ux-btn-secondary"
+                    @onclick="ToggleUrl">
+                🔗 Agregar URL
+            </button>
+
+            @if (mostrarUrl)
+            {
+                <input class="ux-input-url"
+                       @bind="urlArchivo"
+                       placeholder="https://..." />
+            }
+
+        </div>
+
+        <!-- ===================== -->
+        <!-- ANEXOS -->
+        <!-- ===================== -->
+        <div class="ux-card-form">
+
+            <h2>Anexos</h2>
+
+            <!-- BOTÓN -->
+
+
+            <InputFile id="fileUploadMulti"
+                       OnChange="HandleFilesSelected"
+                       multiple
+                       class="hidden-input" />
+
+            <!-- 🔽 TEXTO DE AYUDA -->
+            <p class="ux-file-hint">
+                (Peso máximo de cada archivo: 20MB)(Formatos permitidos: PDF, DOCX, XLSX, PPT, JPG, PNG y ZIP)(Numero máximo de anexos: 10)
+            </p>
+
+            <br />
+
+            <div class="ux-table-wrapper">
+                <!-- TABLA -->
+                <table class="ux-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Tamaño</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (archivos.Any())
+                        {
+                            @foreach (var archivo in archivos)
+                            {
+                                <tr>
+                                    <td>@archivo.Nombre</td>
+                                    <td>@archivo.Tipo</td>
+                                    <td>@archivo.Tamano</td>
+                                    <td>
+                                        @* <button class="btn-preview"
+                                            @onclick="() => PreviewArchivo(archivo)">
+                                        👁
+                                    </button> *@
+
+                                        <button class="btn-delete"
+                                                @onclick="() => EliminarArchivo(archivo)">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="ux-empty">
+                                    No hay archivos cargados
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <hr class="ux-divider" />
+
+            <div class="ux-nota">
+                <strong>Nota:</strong><br />
+                El número del expediente de la presente solicitud será notificado al correo electrónico consignado en el presente formulario.
+            </div>
+
+            <hr class="ux-divider" />
+
+            <div class="ux-actions">
+                <button class="ux-btn-primary" @onclick="Finalizar">
+                    Enviar solicitud
+                </button>
+            </div>
+
+        </div>
+
+        <!-- MODAL PREVIEW -->
+        @if (!string.IsNullOrEmpty(previewUrl))
+        {
+            <div class="ux-modal-overlay" @onclick="CerrarPreview">
+                <div class="ux-modal-content" @onclick:stopPropagation="true">
+
+                    <button class="ux-close" @onclick="CerrarPreview">✖</button>
+
+                    <div class="ux-iframe-wrapper">
+                        <iframe src="@previewUrl"></iframe>
+                    </div>
+
+                </div>
+            </div>
+        }
+
+        <!-- ===================== -->
+        <!-- FINAL -->
+        <!-- ===================== -->
+        @* <div class="ux-card-form ux-success">
+
+            <h2>Finalizar Registro</h2>
+
+            <button class="ux-button" @onclick="Finalizar">
+                Registrar Trámite
+            </button>
+
+        </div> *@
+
+    </div>
+
+</div>
+
+@code {
+    private string tipoDocumento = "DNI";
+    private string numeroDocumento = "";
+
+    private string apellidoPaterno = "";
+    private string apellidoMaterno = "";
+    private string nombres = "";
+
+    private string errorDocumento = "";
+    private bool bloquearDatos = true;
+
+    private void ValidarDocumento()
+    {
+        errorDocumento = "";
+
+        if (tipoDocumento == "DNI")
+        {
+            if (numeroDocumento.Length != 8 || !numeroDocumento.All(char.IsDigit))
+            {
+                errorDocumento = "El DNI debe tener 8 dígitos numéricos.";
+            }
+        }
+    }
+
+    private void ValidarDatos()
+    {
+        errorDocumento = "";
+
+        if (tipoDocumento == "DNI")
+        {
+            if (numeroDocumento.Length != 8 || !numeroDocumento.All(char.IsDigit))
+            {
+                errorDocumento = "DNI inválido.";
+                return;
+            }
+
+            // 🔥 SIMULACIÓN (luego API RENIEC)
+            apellidoPaterno = "Pérez";
+            apellidoMaterno = "García";
+            nombres = "Juan Carlos";
+
+            bloquearDatos = true;
+        }
+        else
+        {
+            // Otros documentos → editable
+            bloquearDatos = false;
+
+            apellidoPaterno = "";
+            apellidoMaterno = "";
+            nombres = "";
+        }
+    }
+
+    private void OnTipoDocumentoChange()
+    {
+        numeroDocumento = "";
+        errorDocumento = "";
+
+        apellidoPaterno = "";
+        apellidoMaterno = "";
+        nombres = "";
+
+        bloquearDatos = tipoDocumento == "DNI";
+    }
+
+    [Inject] NavigationManager Nav { get; set; }
+
+    // Archivo principal
+    private IBrowserFile? archivo;
+    private string? pdfPreviewUrl;
+
+    // Anexos
+    private List<ArchivoAdjunto> archivos = new();
+
+    // UI / estado
+    private string error = "";
+    private string urlArchivo = "";
+    private bool mostrarUrl = false;
+
+    private void Finalizar()
+    {
+        // Aquí luego irá el POST al backend
+        Nav.NavigateTo("/");
+    }
+
+    // =========================
+    // ARCHIVO PRINCIPAL (PDF)
+    // =========================
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        error = "";
+        archivo = e.File;
+
+        if (archivo == null)
+            return;
+
+        if (archivo.ContentType != "application/pdf")
+        {
+            error = "Solo se permiten archivos PDF.";
+            archivo = null;
+            pdfPreviewUrl = null;
+            return;
+        }
+
+        if (archivo.Size > 25 * 1024 * 1024)
+        {
+            error = "Máximo 25MB.";
+            archivo = null;
+            pdfPreviewUrl = null;
+            return;
+        }
+
+        // Generar preview
+        var stream = archivo.OpenReadStream(25 * 1024 * 1024);
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+
+        var bytes = ms.ToArray();
+        var base64 = Convert.ToBase64String(bytes);
+
+        pdfPreviewUrl = $"data:application/pdf;base64,{base64}";
+    }
+
+    // =========================
+    // ANEXOS (MULTIPLES)
+    // =========================
+    // private async Task HandleFilesSelected(InputFileChangeEventArgs e)
+    // {
+    //     foreach (var file in e.GetMultipleFiles(10))
+    //     {
+    //         if (file.Size > 20 * 1024 * 1024)
+    //             continue;
+
+    //         var extension = Path.GetExtension(file.Name).ToLower();
+
+    //         var permitidos = new[] { ".pdf", ".docx", ".xlsx", ".ppt", ".jpg", ".png", ".zip" };
+
+    //         if (!permitidos.Contains(extension))
+    //             continue;
+
+    //         archivos.Add(new ArchivoAdjunto
+    //         {
+    //             Nombre = file.Name,
+    //             Tipo = extension,
+    //             Tamano = $"{file.Size / 1024} KB"
+    //         });
+    //     }
+    // }
+    private async Task HandleFilesSelected(InputFileChangeEventArgs e)
+    {
+        if (archivos.Count >= 10)
+            return;
+
+        foreach (var file in e.GetMultipleFiles(10))
+        {
+            if (archivos.Count >= 10)
+                break;
+
+            if (file.Size > 20 * 1024 * 1024)
+                continue;
+
+            var extension = Path.GetExtension(file.Name).ToLower();
+            var permitidos = new[] { ".pdf", ".docx", ".xlsx", ".ppt", ".jpg", ".png", ".zip" };
+
+            if (!permitidos.Contains(extension))
+                continue;
+
+            using var ms = new MemoryStream();
+            await file.OpenReadStream(20 * 1024 * 1024).CopyToAsync(ms);
+
+            var base64 = Convert.ToBase64String(ms.ToArray());
+
+            archivos.Add(new ArchivoAdjunto
+            {
+                Nombre = file.Name,
+                Tipo = extension,
+                Tamano = $"{file.Size / 1024} KB",
+                Base64 = base64
+            });
+        }
+    }
+
+    private void PreviewArchivo(ArchivoAdjunto archivo)
+    {
+        previewUrl = $"data:application/pdf;base64,{archivo.Base64}";
+    }
+
+    private void CerrarPreview()
+    {
+        previewUrl = null;
+    }
+
+    private void EliminarArchivo(ArchivoAdjunto archivo)
+    {
+        archivos.Remove(archivo);
+    }
+
+    // =========================
+    // UI
+    // =========================
+    private void ToggleUrl()
+    {
+        mostrarUrl = !mostrarUrl;
+    }
+
+    // =========================
+    // MODELO
+    // =========================
+    public class ArchivoAdjunto
+    {
+        public string Nombre { get; set; }
+        public string Tipo { get; set; }
+        public string Tamano { get; set; }
+        public string Base64 { get; set; }
+    }
+
+    private string? previewUrl;
+
+
+}

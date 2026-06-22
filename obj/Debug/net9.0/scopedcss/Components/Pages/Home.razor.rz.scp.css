@@ -17,7 +17,7 @@ body[b-id3j8gt7nz] {
    2. ESTRUCTURA Y CONTENEDORES (Alineación Estricta a la Izquierda)
    ========================================================================== */
 .ux-bg[b-id3j8gt7nz] {
-    min-height: 100vh;
+/*    min-height: 100vh;*/
     display: flex;
     justify-content: center;
     align-items: center;
