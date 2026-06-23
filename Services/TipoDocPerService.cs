@@ -13,10 +13,15 @@ namespace MesaPartesDigital.Services
             _context = context;
         }
 
-        // 🟢 TU TERCER GET
-        public async Task<List<TipoDocPer>> ObtenerTiposDocPerAsync()
+         public async Task<List<TipoDocPer>> ObtenerTiposDocPerAsync()
         {
             return await _context.TipoDocPers.ToListAsync();
+        }
+
+        public async Task<PersonaBusquedaDto?> BuscarPersonaPorDocumentoAsync(int iCodTipoDocPer, string vDocPer)
+        {
+            var resultado = await _context.ObtenerPersonaPorDocumentoAsync(iCodTipoDocPer, vDocPer);
+            return resultado.FirstOrDefault();
         }
     }
 }
