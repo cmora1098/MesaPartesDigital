@@ -214,3 +214,6 @@ C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\MesaPartesDigital
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\MesaPart.3E1435CB.Up2Date
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\z7ffcz6gus-o9yg2msogd.gz
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\g2tieop9t1-o9yg2msogd.gz
+C:\Users\cmora\source\repos\MesaPartesDigital\bin\Debug\net9.0\BouncyCastle.Cryptography.dll
+C:\Users\cmora\source\repos\MesaPartesDigital\bin\Debug\net9.0\MailKit.dll
+C:\Users\cmora\source\repos\MesaPartesDigital\bin\Debug\net9.0\MimeKit.dll

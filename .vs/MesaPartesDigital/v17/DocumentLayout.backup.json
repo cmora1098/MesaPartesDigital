@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{13897682-3C59-7F07-ACD0-85B2C6D0FCD5}|MesaPartesDigital.csproj|solutionrelative:components\\pages\\inicionatural.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{13897682-3C59-7F07-ACD0-85B2C6D0FCD5}|MesaPartesDigital.csproj|c:\\users\\cmora\\source\\repos\\mesapartesdigital\\models\\archivoadjunto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13897682-3C59-7F07-ACD0-85B2C6D0FCD5}|MesaPartesDigital.csproj|solutionrelative:models\\archivoadjunto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{13897682-3C59-7F07-ACD0-85B2C6D0FCD5}|MesaPartesDigital.csproj|c:\\users\\cmora\\source\\repos\\mesapartesdigital\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{13897682-3C59-7F07-ACD0-85B2C6D0FCD5}|MesaPartesDigital.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -30,13 +34,13 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "App.razor",
               "DocumentMoniker": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\Components\\App.razor",
               "RelativeDocumentMoniker": "Components\\App.razor",
               "ToolTip": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\Components\\App.razor",
               "RelativeToolTip": "Components\\App.razor",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA5AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAABnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-06-18T21:58:25.132Z",
               "IsPinned": true,
@@ -48,9 +52,9 @@
               "Title": "InicioNatural.razor",
               "DocumentMoniker": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\Components\\Pages\\InicioNatural.razor",
               "RelativeDocumentMoniker": "Components\\Pages\\InicioNatural.razor",
-              "ToolTip": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\Components\\Pages\\InicioNatural.razor",
-              "RelativeToolTip": "Components\\Pages\\InicioNatural.razor",
-              "ViewState": "AgIAAJoCAAAAAAAAAAApwJcCAAAXAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\Components\\Pages\\InicioNatural.razor*",
+              "RelativeToolTip": "Components\\Pages\\InicioNatural.razor*",
+              "ViewState": "AgIAAMcCAAAAAAAAAAAqwBoDAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-06-22T20:01:05.606Z",
               "IsPinned": true,
@@ -59,25 +63,38 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAACCAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-06-23T17:40:05.318Z",
+              "Title": "ArchivoAdjunto.cs",
+              "DocumentMoniker": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\Models\\ArchivoAdjunto.cs",
+              "RelativeDocumentMoniker": "Models\\ArchivoAdjunto.cs",
+              "ToolTip": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\Models\\ArchivoAdjunto.cs",
+              "RelativeToolTip": "Models\\ArchivoAdjunto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-24T20:54:20.529Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-06-24T15:38:15.495Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\cmora\\source\\repos\\MesaPartesDigital\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADAAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAowBwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-23T14:31:39.249Z",
               "EditorCaption": ""

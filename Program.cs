@@ -26,8 +26,13 @@ builder.Services.AddScoped<TipoDocumentoService>();
 builder.Services.AddScoped<TipoDocPerService>(); // 👈 Deja solo este (ya incluye el namespace gracias al using)
 builder.Services.AddScoped<EstadoService>();
 builder.Services.AddScoped<UbigeoService>();
+ builder.Services.AddScoped<MesaPartesDigital.Services.DocumentoService>();
+builder.Services.AddScoped<IEmailService, EmailService>(); // Registrar el servicio de correos electrónico
 
+
+builder.Services.AddMemoryCache(); // <- Activa el soporte de caché en memoria
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
