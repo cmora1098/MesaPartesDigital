@@ -18,8 +18,14 @@ namespace MesaPartesDigital.Services
             return await _context.TipoDocPers.ToListAsync();
         }
 
-        public async Task<PersonaBusquedaDto?> BuscarPersonaPorDocumentoAsync(int iCodTipoDocPer, string vDocPer)
+        //public async Task<PersonaBusquedaDto?> BuscarPersonaPorDocumentoAsync(int iCodTipoDocPer, string vDocPer)
+        //{
+        //    var resultado = await _context.ObtenerPersonaPorDocumentoAsync(iCodTipoDocPer, vDocPer);
+        //    return resultado.FirstOrDefault();
+        //}
+        public async Task<PersonaNaturalDto?> BuscarPersonaPorDocumentoAsync(int iCodTipoDocPer, string vDocPer)
         {
+            // Ahora el método del contexto devuelve List<PersonaNaturalDto>
             var resultado = await _context.ObtenerPersonaPorDocumentoAsync(iCodTipoDocPer, vDocPer);
             return resultado.FirstOrDefault();
         }

@@ -191,7 +191,7 @@
                 <div class="ux-field">
                     <label>Tipo de Documento *</label>
                     <select @bind="formulario.ICodTipoDoc">
-                        <option value="">--SELECCIONAR--</option>
+                        <option value="0">--SELECCIONAR--</option>
                         <option value="1">INFORME</option>
                         <option value="2">MEMORÁNDUM</option>
                         <option value="3">CARTA</option>
@@ -346,6 +346,7 @@
 </div>
 
 @code {
+
     [Inject] private NavigationManager Nav { get; set; } = default!;
     [Inject] private MesaPartesDigital.Services.TipoDocPerService TipoDocPerService { get; set; } = default!;
     // [Inject] private MesaPartesDigital.Services.UbigeoService UbigeoService { get; set; } = default!;
@@ -664,7 +665,7 @@
         StateHasChanged();
     }
 
-    private async Task Finalizar()
+    async Task Finalizar()
     {
         ValidarDocumento();
         ValidarCorreo();
@@ -688,8 +689,27 @@
 
         try
         {
-            formulario.VRutaDoc = await DocumentoService.GuardarArchivoEnPCAsync(archivo);
+            // 1. Procesa el principal usando el IBrowserFile (Llama a la firma 1 del servicio)
+            string rutaPrincipal = await DocumentoService.GuardarArchivoEnPCAsync(archivo);
 
+            // 2. Procesa los anexos usando los strings de Base64 (Llama a la firma 2 del servicio)
+            var rutasAnexosTemporales = new List<string>();
+
+            if (archivos != null)
+            {
+                foreach (var anexo in archivos)
+                {
+                    if (!string.IsNullOrEmpty(anexo.Base64))
+                    {
+                        // Al pasarle dos strings, C# sabe usar el método del Base64 de forma automática
+                        string rutaHijo = await DocumentoService.GuardarArchivoEnPCAsync(anexo.Nombre, anexo.Base64);
+                        rutasAnexosTemporales.Add(rutaHijo);
+                    }
+                }
+            }
+
+            // 3. Mapear datos al formulario principal e insertar en BD
+            formulario.VRutaDoc = rutaPrincipal;
             formulario.ICodAsunto = 0;
             formulario.BTipo = true;
             formulario.VLink = urlIngresada;
@@ -699,15 +719,16 @@
                 formulario.ICodTipoDoc = 1;
             }
 
+            // Registrar documento Padre en la BD
             MesaPartesDigital.Models.RegistroDocumentoResponse resultadoBD = await DocumentoService.RegistrarArchivoMesaPartesAsync(formulario);
 
-            if (resultadoBD != null && resultadoBD.Status == "OK" && archivos != null)
+            // 4. Registrar documentos Hijos (Anexos) en la BD
+            if (resultadoBD != null && resultadoBD.Status == "OK" && rutasAnexosTemporales.Count > 0)
             {
-                foreach (var anexo in archivos)
+                foreach (var rutaAnexo in rutasAnexosTemporales)
                 {
                     var requestHijo = new MesaPartesDigital.Models.RegistroDocumentoRequest
                     {
-                        // Datos del remitente heredados del principal
                         ICodTipoDocPer = formulario.ICodTipoDocPer,
                         VDocPer = formulario.VDocPer,
                         VNombres = formulario.VNombres,
@@ -718,62 +739,82 @@
                         VDireccion = formulario.VDireccion,
                         VCodDistrito = formulario.VCodDistrito,
 
-                        // Relación con el expediente padre
                         ICodAsunto = resultadoBD.ICodAsunto,
-                        BTipo = false, // Indica que es un anexo / hijo
-                        ICodTipoDoc = 1,
-
-                        // Guarda el número del documento principal
+                        BTipo = false,
+                        ICodTipoDoc = formulario.ICodTipoDoc, // Tu lógica heredada
                         VNroDoc = formulario.VNroDoc,
-
-                        // El documento hijo mantiene la fecha del documento original
                         DFecDoc = formulario.DFecDoc,
-
-                        // 🛠️ SE ELIMINÓ LA LÍNEA QUE DABA ERROR DE COMPILACIÓN
-
                         VReferencia = "Anexo adjunto",
-
-                        // Guarda los folios ingresados en el documento principal
                         VNroPagFolios = formulario.VNroPagFolios,
+                        VLink = null,
 
-                        VLink = null
+                        VRutaDoc = rutaAnexo // Asignamos la ruta que guardamos exitosamente
                     };
 
-                    if (anexo.FileBrowser != null)
-                    {
-                        requestHijo.VRutaDoc = await DocumentoService.GuardarArchivoEnPCAsync(anexo.FileBrowser);
-                        await DocumentoService.RegistrarArchivoMesaPartesAsync(requestHijo);
-                    }
+                    await DocumentoService.RegistrarArchivoMesaPartesAsync(requestHijo);
                 }
             }
 
-            string mensajeSwal = $@"
-            <div class='text-center mb-3'>
-                <p class='text-muted fs-6'>Su documentación ha sido procesada correctamente en nuestro sistema central.</p>
-            </div>
-            <div class='card border-0 bg-light p-3 mx-auto' style='max-width: 400px;'>
-                <div class='d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom'>
-                    <span class='text-secondary fw-semibold small text-uppercase'>Código de Trámite:</span>
-                    <span class='badge bg-primary fs-6 font-monospace px-3 py-2'>{resultadoBD.VAutoGenerado}</span>
-                </div>
-                <div class='d-flex justify-content-between align-items-center pt-1'>
-                    <span class='text-secondary fw-semibold small text-uppercase'>Correo de Seguimiento:</span>
-                    <span class='text-dark fw-medium small text-truncate' style='max-width: 220px;'>{resultadoBD.MailSeguimiento}</span>
-                </div>
-            </div>
-            <div class='text-center mt-3 text-muted small'>
-                <i class='bi bi-info-circle-fill text-info me-1'></i> Se ha enviado un correo con el cargo digital de recepción.
-            </div>";
+            // 📧 ENVÍO DE CORREO: Ejecutado en la línea principal de ejecución estable
+            // 📧 Reemplaza tu bloque de envío actual por este:
+            if (resultadoBD != null && !string.IsNullOrEmpty(resultadoBD.VAutoGenerado) && !string.IsNullOrEmpty(resultadoBD.MailSeguimiento))
+            {
+                Console.WriteLine("[Mesa de Partes] Disparando envío de correo en segundo plano...");
+
+                // Capturamos los datos en variables locales para que el hilo de fondo no pierda la referencia
+                string correoDestino = resultadoBD.MailSeguimiento;
+                string codigoTramite = resultadoBD.VAutoGenerado;
+
+                // Se ejecuta en un hilo separado. Si falla o tarda, NO afectará al SweetAlert ni arrojará "Task was canceled"
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        // Le damos un límite de 15 segundos al envío de correo para que no se quede colgado eternamente
+                        using var cts = new System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(15));
+                        await EmailService.EnviarCargoDigitalAsync(correoDestino, codigoTramite);
+                        Console.WriteLine("[Mesa de Partes] Cargo digital enviado con éxito.");
+                    }
+                    catch (Exception mailEx)
+                    {
+                        // Si el correo falla, se registra en la consola pero el usuario ya vio su Swal de éxito
+                        Console.WriteLine($"[Mesa de Partes - Alerta] No se pudo enviar el correo de fondo: {mailEx.Message}");
+                    }
+                });
+            }
+
+            // 🎨 DISEÑO PRESTIGIO DEL SWEETALERT (Banner Verde Institucional)
+            string mensajeSwal = "<div style='text-align: center; font-family: Arial, sans-serif;'>" +
+      "<div style='background-color: #35af72; margin: -1.25em -1.25em 20px -1.25em; padding: 25px 10px; border-top-left-radius: 5px; border-top-right-radius: 5px;'>" +
+          "<img src='https://www.gob.pe/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDk2ODQ0LCJwdXIiOiJibG9iX2lkIn19--1fc9a7807cf6c726e857b951ca1a374a8414a140/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemVfdG9fbGltaXQiOltudWxsLDQ4XX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--830247c4bafe7cadca50817d8559bf1a09e3aa28/paga%20gob.pe.png' style='max-height: 45px; width: auto;' alt='Logo AGRO RURAL' />" +
+          "<h3 style='color: #ffffff; margin: 12px 0 0 0; font-size: 1.3rem; font-weight: 600;'>¡Documento Registrado!</h3>" +
+      "</div>" +
+      "<p style='color: #555555; font-size: 0.95rem; line-height: 1.5; padding: 0 10px;'>Estimado usuario, su documentación ha sido ingresada de forma satisfactoria en la Mesa de Partes Virtual.</p>" +
+      "<div style='background-color: #f4f9f5; border: 1px dashed #35af72; border-radius: 6px; padding: 15px; margin: 20px 10px; text-align: left;'>" +
+          "<div style='margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;'>" +
+              "<span style='color: #666666; font-size: 0.85rem; font-weight: bold; text-transform: uppercase;'>Código de Trámite:</span>" +
+              "<span style='color: #006432; font-family: monospace; font-size: 1.15rem; font-weight: bold; background: #e8f5e9; padding: 3px 8px; border-radius: 4px;'>" + (resultadoBD?.VAutoGenerado ?? "N/A") + "</span>" +
+          "</div>" +
+          "<div style='display: flex; justify-content: space-between; align-items: center;'>" +
+              "<span style='color: #666666; font-size: 0.85rem; font-weight: bold; text-transform: uppercase;'>Mail de Seguimiento:</span>" +
+              "<span style='color: #333333; font-size: 0.9rem; font-weight: 600; text-align: right; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + (resultadoBD?.MailSeguimiento ?? "N/A") + "</span>" +
+          "</div>" +
+      "</div>" +
+      "<div style='font-size: 0.8rem; color: #666666; background-color: #fff8e7; border-left: 4px solid #f39c12; padding: 10px; margin: 0 10px 10px 10px; text-align: left; border-radius: 4px;'>📌 <strong>Notificación Enviada:</strong> Se ha despachado el cargo electrónico con el acuse de recibo a la dirección señalada.</div>" +
+  "</div>";
 
             await JS.InvokeVoidAsync("Swal.fire", new
             {
-                title = "¡Registro Exitoso!",
                 html = mensajeSwal,
-                icon = "success",
-                confirmButtonText = "Finalizar y Volver al Menú",
-                confirmButtonColor = "#0d6efd",
+                icon = "",
+                confirmButtonText = "Finalizar y Volver",
+                confirmButtonColor = "#35af72",
                 allowOutsideClick = false,
-                allowEscapeKey = false
+                allowEscapeKey = false,
+
+                // 🕒 AUTO-CIERRE EN 15 SEGUNDOS (15000 milisegundos)
+                timer = 15000,
+                timerProgressBar = true // Muestra una barrita verde consumiéndose abajo
             });
 
             Nav.NavigateTo("/");
@@ -793,6 +834,5 @@
             });
         }
     }
-
 
 }

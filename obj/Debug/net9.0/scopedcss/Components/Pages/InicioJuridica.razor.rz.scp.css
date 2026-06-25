@@ -236,6 +236,52 @@ input.ux-readonly[b-ehn9wmc07g] {
         color: white;
     }
 
+.ux-btn-primary[b-ehn9wmc07g] {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+    .ux-btn-primary:hover[b-ehn9wmc07g] {
+        background: #1d4ed8;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+
+    .ux-btn-primary:active[b-ehn9wmc07g] {
+        transform: scale(0.98);
+    }
+
+
+.ux-btn-secondary[b-ehn9wmc07g] {
+    background: transparent;
+    border: 1px solid #0c7c3b;
+    color: #0c7c3b;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .ux-btn-secondary:hover[b-ehn9wmc07g] {
+        background: #0c7c3b;
+        color: white;
+    }
+
+
+
 /* ==========================================================================
    8. TABLAS RESPONSIVAS (ANEXOS)
    ========================================================================== */
@@ -433,4 +479,27 @@ input.ux-readonly[b-ehn9wmc07g] {
     }
 }
 
- 
+@media (max-width: 768px) {
+    .ux-bg[b-ehn9wmc07g] {
+        padding: 20px 15px;
+    }
+
+    .ux-card-form[b-ehn9wmc07g] {
+        padding: 22px;
+    }
+
+    /* La rejilla pasa a 1 sola columna vertical en móviles */
+    .ux-grid-form[b-ehn9wmc07g] {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    /* ⚡ Obligamos a que deje de medir 2 columnas cuando la pantalla es pequeña */
+    .ux-field.full[b-ehn9wmc07g] {
+        grid-column: span 1 !important;
+    }
+
+    .ux-pdf-preview iframe[b-ehn9wmc07g] {
+        height: 350px;
+    }
+}

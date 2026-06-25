@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MesaPartesDigital.Models
 {
-    [Table("T_TipoDocumento")] // 👈 Tu tabla real
+    [Table("T_TipoDocumento")]
     public class TipoDocumento
     {
         [Key]
-        [Column("iCodTipoDoc")] // 👈 Tu PK
+        [Column("iCodTipoDoc")]
         public int ICodTipoDoc { get; set; }
 
         [Column("vNombreTipoDoc")]

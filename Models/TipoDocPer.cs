@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MesaPartesDigital.Models
 {
-    [Table("T_TipoDocPer")] // 👈 Nombre de tu tabla real
+    [Table("T_TipoDocPer")]
     public class TipoDocPer
     {
         [Key]
-        [Column("iCodTipoDocPer")] // 👈 Tu Llave Primaria
+        [Column("iCodTipoDocPer")]
         public int ICodTipoDocPer { get; set; }
 
-        [Column("vDescTipoDoc")] // 👈 Ojo aquí, usaste "vDescTipoDoc" según tu esquema
+        [Column("vDescTipoDoc")]
         public string VDescTipoDoc { get; set; } = string.Empty;
 
         [Column("bActivo")]

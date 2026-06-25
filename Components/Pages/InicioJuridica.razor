@@ -1,6 +1,11 @@
 ﻿@page "/inicio/juridica"
 @rendermode InteractiveServer
 
+@inject ApplicationDbContext DbContext
+@inject UbigeoService UbigeoService
+@inject IEmailService EmailService
+
+
 @using Microsoft.AspNetCore.Components.Forms
 
 <div class="ux-bg">
@@ -24,110 +29,201 @@
                 <div class="ux-field">
                     <label>RUC *</label>
                     <div class="ux-input-group">
-                        <input @bind="rucInputValue" placeholder="Ingrese RUC" />
-                        <button type="button" class="ux-button" @onclick="ValidarRuc">
-                            Validar
-                        </button>
+                        <input @bind="rucInputValue" placeholder="Ingrese RUC" maxlength="11" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                        <button type="button" class="ux-button" @onclick="ValidarRuc">Validar</button>
                     </div>
+                    @if (!string.IsNullOrEmpty(rucErrorMsg) && !bloqueadoRazonSocial)
+                    {
+                        /* Si está desbloqueado, el error ya no va aquí, va abajo */
+                    }
+                    else if (!string.IsNullOrEmpty(rucErrorMsg))
+                    {
+                        <span class="ux-error">@rucErrorMsg</span>
+                    }
                 </div>
 
                 <div class="ux-field">
                     <label>Razón Social *</label>
-                    <input @bind="razonSocialValue" readonly class="ux-readonly" placeholder="Se autocompleta al validar" />
-                </div>
+                    <input @bind="razonSocialValue"
+                           readonly="@bloqueadoRazonSocial"
+                           class="@(bloqueadoRazonSocial ? "ux-readonly" : "")" />
 
-                <div class="ux-field full">
-                    <label>Dirección *</label>
-                    <input />
+                    @if (!string.IsNullOrEmpty(rucErrorMsg) && !bloqueadoRazonSocial)
+                    {
+                        <span class="ux-error">@rucErrorMsg</span>
+                    }
                 </div>
-
-                <div class="ux-field">
-                    <label>Correo *</label>
-                    <input type="email" />
-                </div>
-
-                <div class="ux-field">
-                    <label>Teléfono *</label>
-                    <input />
-                </div>
-
+                
             </div>
 
         </div>
 
+     
         <div class="ux-card-form">
-
             <h2>II. DATOS DEL REPRESENTANTE LEGAL</h2>
 
             <div class="ux-grid-form">
-
                 <div class="ux-field">
                     <label>Tipo de Documento *</label>
-                    <select @bind="repTipoDocumento" @bind:after="OnRepTipoDocumentoChange">
-                        <option value="DNI">DNI</option>
-                        <option value="CE">Carnet de Extranjería</option>
-                        <option value="PAS">Pasaporte</option>
+                    <select @bind="formulario.ICodTipoDocPer" @bind:after="OnTipoDocumentoChange">
+                        <option value="1">DNI</option>
+                        <option value="3">CE (Carnet de Extranjería)</option>
                     </select>
                 </div>
 
                 <div class="ux-field">
                     <label>Nro. Documento *</label>
-                    @if (repTipoDocumento == "DNI")
-                    {
-                        <div class="ux-input-group">
-                            <input @bind="repNumeroDocumento" maxlength="8" placeholder="Ingrese DNI" />
-                            <button type="button" class="ux-button" @onclick="ValidarRepDni">
-                                Validar
-                            </button>
-                        </div>
-                    }
-                    else
-                    {
-                        <input @bind="repNumeroDocumento" maxlength="20" placeholder="Ingrese Nro. Documento" />
-                    }
+                    <input @bind="formulario.VDocPer"
+                           @bind:after="ValidarDocumento"
+                           maxlength="@(formulario.ICodTipoDocPer == 1 ? "8" : "10")"
+                           onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                           placeholder="@(formulario.ICodTipoDocPer == 1 ? "Ingresar Número de DNI" : "Ingresar Número de Carnet de Extranjería")" />
 
-                    @if (!string.IsNullOrEmpty(repErrorDocumento))
+                    @if (!string.IsNullOrEmpty(errorDocumento))
                     {
-                        <span class="ux-error">@repErrorDocumento</span>
+                        <span class="ux-error">@errorDocumento</span>
                     }
                 </div>
 
+                @if (formulario.ICodTipoDocPer == 1)
+                {
+                    <div class="ux-field full">
+                        <button class="ux-btn-primary" @onclick="ValidarDatos" style="width: 100%;">
+                            Validar datos
+                        </button>
+                    </div>
+                }
+
                 <div class="ux-field">
                     <label>Apellido Paterno *</label>
-                    <input @bind="repApellidoPaterno"
-                           readonly="@repCamposBloqueados"
-                           class="@(repCamposBloqueados ? "ux-readonly" : "")"
-                           placeholder="@(repCamposBloqueados ? "Se autocompleta al validar" : "")" />
+                    <input @bind="formulario.VApellidoPaterno" disabled="@bloquearDatos" style="text-transform: uppercase;" />
                 </div>
 
                 <div class="ux-field">
                     <label>Apellido Materno *</label>
-                    <input @bind="repApellidoMaterno"
-                           readonly="@repCamposBloqueados"
-                           class="@(repCamposBloqueados ? "ux-readonly" : "")"
-                           placeholder="@(repCamposBloqueados ? "Se autocompleta al validar" : "")" />
+                    <input @bind="formulario.VApellidoMaterno" disabled="@bloquearDatos" style="text-transform: uppercase;" />
                 </div>
 
                 <div class="ux-field">
                     <label>Nombres *</label>
-                    <input @bind="repNombres"
-                           readonly="@repCamposBloqueados"
-                           class="@(repCamposBloqueados ? "ux-readonly" : "")"
-                           placeholder="@(repCamposBloqueados ? "Se autocompleta al validar" : "")" />
+                    <input @bind="formulario.VNombres" disabled="@bloquearDatos" style="text-transform: uppercase;" />
                 </div>
 
                 <div class="ux-field">
                     <label>Teléfono *</label>
-                    <input @bind="repTelefono" placeholder="Ej: 999888777" />
+                    <input @bind="formulario.VTelefono" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                 </div>
 
                 <div class="ux-field">
                     <label>Correo *</label>
-                    <input type="email" @bind="repCorreo" placeholder="ejemplo@correo.com" />
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; width: 100%; text-transform: uppercase;">
+                        <input type="email"
+                               @bind="formulario.VEmail"
+                               @bind:after="ValidarCorreo"
+                               placeholder="ejemplo@correo.com"
+                               style="flex: 1 1 200px; min-width: 0;"
+                               disabled="@(codigoVerificado || enviandoCorreo)" />
+
+                        <button type="button"
+                                class="ux-btn-secondary"
+                                @onclick="GenerarCodigoVerificacion"
+                                style="flex: 0 0 auto; min-width: 140px; white-space: nowrap;"
+                                disabled="@(string.IsNullOrEmpty(formulario.VEmail) || !string.IsNullOrEmpty(errorCorreo) || codigoVerificado || enviandoCorreo)">
+                            @(enviandoCorreo ? "Enviando..." : "Generar Código")
+                        </button>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(errorCorreo))
+                    {
+                        <span class="ux-error">@errorCorreo</span>
+                    }
+                    @if (!string.IsNullOrEmpty(mensajeCodigo))
+                    {
+                        <span style="color: #2e7d32; font-size: 0.85rem; margin-top: 4px; display: block;">@mensajeCodigo</span>
+                    }
+                </div>
+
+                @if (mostrarCampoCodigo)
+                {
+                    <div class="ux-field">
+                        <label>Ingresa código generado *</label>
+                        <div style="position: relative; width: 100%; margin-top: 5px;">
+                            <input type="text"
+                                   @bind="codigoIngresado"
+                                   @bind:after="VerificarCodigoAutomatico"
+                                   maxlength="6"
+                                   placeholder="AQUÍ LOS 6 DÍGITOS"
+                                   style="width: 100%; padding-right: 40px;"
+                                   disabled="@codigoVerificado" />
+
+                            @if (codigoVerificado)
+                            {
+                                <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #2e7d32; font-weight: bold;">
+                                    ✅
+                                </span>
+                            }
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(errorCodigo))
+                        {
+                            <span class="ux-error" style="display: block; margin-top: 4px;">@errorCodigo</span>
+                        }
+                    </div>
+                }
+
+                <div class="ux-field">
+                    <label>Dirección *</label>
+                    <input @bind="formulario.VDireccion" placeholder="Ej: Av. Arequipa 123, Dpto. 402, Urb. San Felipe" style="text-transform: uppercase;" />
+                    <small class="ux-help">
+                        Ingrese vía, número, interior/departamento, urbanización o AA.HH.
+                    </small>
+                </div>
+
+                <div class="ux-field">
+                    <label>Departamento *</label>
+                    <select @bind="departamentoSeleccionado" @bind:after="OnDepartamentoChanged">
+                        <option value="">-- SELECCIONAR --</option>
+                        @if (ListaDepartamentos != null)
+                        {
+                            @foreach (var dep in ListaDepartamentos)
+                            {
+                                <option value="@dep.vCodDepartamento" style="text-transform: uppercase;">@dep.vNomDepartamento</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="ux-field">
+                    <label>Provincia *</label>
+                    <select @bind="provinciaSeleccionada" @bind:after="OnProvinciaChanged" disabled="@(string.IsNullOrEmpty(departamentoSeleccionado))">
+                        <option value="">-- SELECCIONAR --</option>
+                        @if (ListaProvincias != null)
+                        {
+                            @foreach (var prov in ListaProvincias)
+                            {
+                                <option value="@prov.vCodProvincia" style="text-transform: uppercase;">@prov.vNomProvincia</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="ux-field">
+                    <label>Distrito *</label>
+                    <select @bind="formulario.VCodDistrito" disabled="@(string.IsNullOrEmpty(provinciaSeleccionada))">
+                        <option value="">-- SELECCIONAR --</option>
+                        @if (ListaDistritos != null)
+                        {
+                            @foreach (var dist in ListaDistritos)
+                            {
+                                <option value="@dist.vCodDistrito" style="text-transform: uppercase;">@dist.vNomDistrito</option>
+                            }
+                        }
+                    </select>
                 </div>
 
             </div>
         </div>
+
 
         <div class="ux-card-form">
 
@@ -303,180 +399,14 @@
     </div>
 
 </div>
-@* 
-@code {
-
-    [Inject] NavigationManager Nav { get; set; }
-
-    // Variables para el RUC y Razón Social
-    private string rucInputValue = "";
-    private string razonSocialValue = "";
-
-    private IBrowserFile? archivo;
-    private string? pdfPreviewUrl;
-
-    private List<ArchivoAdjunto> archivos = new();
-
-    private string error = "";
-    private string urlArchivo = "";
-    private bool mostrarUrl = false;
-
-    // Método simulado para validar el RUC (Aquí puedes conectar tu API de SUNAT o backend)
-    private async Task ValidarRuc()
-    {
-        if (string.IsNullOrWhiteSpace(rucInputValue))
-        {
-            razonSocialValue = "RUC Inválido";
-            return;
-        }
-
-        // Simulación de retraso de red / API
-        razonSocialValue = "Buscando...";
-        await Task.Delay(800);
-
-        // Ejemplo de respuesta simulada
-        if (rucInputValue == "20123456789")
-        {
-            razonSocialValue = "EMPRESA DE PRUEBA S.A.C.";
-        }
-        else
-        {
-            razonSocialValue = $"EMPRESA ASOCIADA AL RUC {rucInputValue}";
-        }
-    }
-
-    private void Finalizar()
-    {
-        Nav.NavigateTo("/");
-    }
-
-    private async Task OnFileSelected(InputFileChangeEventArgs e)
-    {
-        error = "";
-        archivo = e.File;
-
-        if (archivo == null)
-            return;
-
-        if (archivo.ContentType != "application/pdf")
-        {
-            error = "Solo PDF.";
-            archivo = null;
-            pdfPreviewUrl = null;
-            return;
-        }
-
-        var stream = archivo.OpenReadStream(25 * 1024 * 1024);
-        using var ms = new MemoryStream();
-        await stream.CopyToAsync(ms);
-
-        var base64 = Convert.ToBase64String(ms.ToArray());
-        pdfPreviewUrl = $"data:application/pdf;base64,{base64}";
-    }
-
-    private async Task HandleFilesSelected(InputFileChangeEventArgs e)
-    {
-        foreach (var file in e.GetMultipleFiles(10))
-        {
-            if (file.Size > 20 * 1024 * 1024)
-                continue;
-
-            var ext = Path.GetExtension(file.Name).ToLower();
-
-            var permitidos = new[] { ".pdf", ".docx", ".xlsx", ".ppt", ".jpg", ".png", ".zip" };
-
-            if (!permitidos.Contains(ext))
-                continue;
-
-            archivos.Add(new ArchivoAdjunto
-            {
-                Nombre = file.Name,
-                Tipo = ext,
-                Tamano = $"{file.Size / 1024} KB"
-            });
-        }
-    }
-
-    private void EliminarArchivo(ArchivoAdjunto archivo)
-    {
-        archivos.Remove(archivo);
-    }
-
-    private void ToggleUrl()
-    {
-        mostrarUrl = !mostrarUrl;
-    }
-
-    public class ArchivoAdjunto
-    {
-        public string Nombre { get; set; }
-        public string Tipo { get; set; }
-        public string Tamano { get; set; }
-    }
-
  
-    // Variables para el Representante Legal
-    private string repTipoDocumento = "DNI";
-    private string repNumeroDocumento = "";
-    private string repErrorDocumento = "";
-    private string repApellidoPaterno = "";
-    private string repApellidoMaterno = "";
-    private string repNombres = "";
-    private string repTelefono = "";
-    private string repCorreo = "";
 
-    // CAMBIO AQUÍ: Inicia en true porque el formulario por defecto selecciona "DNI"
-    private bool repCamposBloqueados = true;
-
-    private void OnRepTipoDocumentoChange()
-    {
-        repNumeroDocumento = "";
-        repErrorDocumento = "";
-        repApellidoPaterno = "";
-        repApellidoMaterno = "";
-        repNombres = "";
-
-        // Si es DNI vuelve a bloquearse (true), si es CE o PAS se desbloquea (false)
-        repCamposBloqueados = (repTipoDocumento == "DNI");
-    }
-
-    private async Task ValidarRepDni()
-    {
-        repErrorDocumento = "";
-
-        if (string.IsNullOrWhiteSpace(repNumeroDocumento) || repNumeroDocumento.Length != 8)
-        {
-            repErrorDocumento = "El DNI debe tener 8 dígitos.";
-            return;
-        }
-
-        repNombres = "Buscando...";
-        repApellidoPaterno = "...";
-        repApellidoMaterno = "...";
-
-        await Task.Delay(900);
-
-        if (repNumeroDocumento == "44445555")
-        {
-            repApellidoPaterno = "PÉREZ";
-            repApellidoMaterno = "GARCÍA";
-            repNombres = "JUAN CARLOS";
-        }
-        else
-        {
-            repApellidoPaterno = "MENDOZA";
-            repApellidoMaterno = "CASTRO";
-            repNombres = "MARÍA ELENA";
-        }
-    }
-
-
-} *@
 
 @code {
     // =================================================================
     // 💾 INYECCIÓN DE SERVICIOS Y CONTEXTO
     // =================================================================
+    [Inject] private MesaPartesDigital.Services.TipoDocPerService TipoDocPerService { get; set; } = default!;
     [Inject] private MesaPartesDigital.Services.TipoDocumentoService TipoDocService { get; set; } = default!;
     [Inject] private NavigationManager Nav { get; set; } = default!;
 
@@ -485,135 +415,320 @@
     // =================================================================
     private List<MesaPartesDigital.Models.TipoDocumento>? listaTiposDocumento;
     private int idTipoDocSeleccionado = 0; // Almacenará el iCodTipoDoc seleccionado (1, 2, 3, etc.)
+    private List<MesaPartesDigital.Models.TipoDocPer>? listaTiposDocPersona;
 
+
+    // =================================================================
+    //  CORREO ELECTRONICO - VALIDACION
+    // =================================================================
+    private MesaPartesDigital.Models.RegistroDocumentoRequest formulario = new()
+    {
+        ICodTipoDocPer = 2,
+        DFecDoc = DateTime.Today
+    };
+
+
+
+    // 📧 Correo y Validación OTP
+    private string codigoIngresado = "";
+    private string codigoGeneradoOculto = "";
+    private string errorCodigo = "";
+    private string mensajeCodigo = "";
+    private bool mostrarCampoCodigo = false;
+    private bool codigoVerificado = false;
+    private bool enviandoCorreo = false;
+    private string errorCorreo = "";
+    private string errorDocumento = "";
+
+    private void ValidarCorreo()
+    {
+        errorCorreo = "";
+        formulario.VEmail = formulario.VEmail?.Trim() ?? string.Empty;
+
+        if (string.IsNullOrWhiteSpace(formulario.VEmail))
+        {
+            errorCorreo = "El correo electrónico es obligatorio.";
+            return;
+        }
+
+        var regexEmail = new System.Text.RegularExpressions.Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+
+        if (!regexEmail.IsMatch(formulario.VEmail))
+        {
+            errorCorreo = "El formato del correo electrónico no es válido.";
+        }
+    }
+
+    private async Task GenerarCodigoVerificacion()
+    {
+        errorCodigo = "";
+        errorCorreo = "";
+        mensajeCodigo = "";
+        enviandoCorreo = true;
+
+        var random = new Random();
+        codigoGeneradoOculto = random.Next(100000, 999999).ToString();
+
+        try
+        {
+            bool enviado = await EmailService.EnviarCodigoOtpAsync(formulario.VEmail, codigoGeneradoOculto);
+
+            if (enviado)
+            {
+                mostrarCampoCodigo = true;
+                mensajeCodigo = $"Se ha enviado un código de verificación a {formulario.VEmail.ToLower()}.";
+                Console.WriteLine($"[MesaPartes] -> Token OTP despachado: {codigoGeneradoOculto}");
+            }
+            else
+            {
+                errorCorreo = "No se pudo despachar el correo. Revise el log del servidor.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorCorreo = "Ocurrió un fallo inesperado al procesar el envío del correo electrónico.";
+            Console.WriteLine($"[SMTP Error]: {ex.Message}");
+        }
+        finally
+        {
+            enviandoCorreo = false;
+            StateHasChanged();
+        }
+    }
+
+    private void VerificarCodigoAutomatico()
+    {
+        errorCodigo = "";
+
+        if (string.IsNullOrEmpty(codigoIngresado) || codigoIngresado.Length < 6)
+        {
+            return;
+        }
+
+        if (codigoIngresado == codigoGeneradoOculto)
+        {
+            codigoVerificado = true;
+            mensajeCodigo = "¡Código Aprobado! ✅ El correo ha sido validado.";
+            errorCodigo = "";
+        }
+        else
+        {
+            codigoVerificado = false;
+            errorCodigo = "El código ingresado es incorrecto.";
+        }
+
+        StateHasChanged();
+    }
+
+
+    // =================================================================
+    //  VARIABLES DEL ESTADO PARA UBIGEO
+    // =================================================================
+    private List<MesaPartesDigital.Models.Departamento> ListaDepartamentos { get; set; } = new();
+    private List<MesaPartesDigital.Models.Provincia> ListaProvincias { get; set; } = new();
+    private List<MesaPartesDigital.Models.Distrito> ListaDistritos { get; set; } = new();
+
+    private string departamentoSeleccionado { get; set; } = string.Empty;
+    private string provinciaSeleccionada { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            listaTiposDocPersona = await TipoDocPerService.ObtenerTiposDocPerAsync();
+            ListaDepartamentos = await UbigeoService.ObtenerDepartamentosAsync();
+            formulario.ICodTipoDocPer = 1;
+        }
+        catch (Exception ex)
+        {
+            errorDocumento = "No se pudieron cargar las configuraciones iniciales.";
+            Console.WriteLine($"Error OnInitializedAsync: {ex.Message}");
+        }
+    }
+
+    private async Task OnDepartamentoChanged()
+    {
+        provinciaSeleccionada = string.Empty;
+        formulario.VCodDistrito = string.Empty;
+        ListaProvincias.Clear();
+        ListaDistritos.Clear();
+
+        if (!string.IsNullOrEmpty(departamentoSeleccionado))
+        {
+            ListaProvincias = await UbigeoService.ObtenerProvinciasAsync(departamentoSeleccionado);
+        }
+    }
+
+    private async Task OnProvinciaChanged()
+    {
+        formulario.VCodDistrito = string.Empty;
+        ListaDistritos.Clear();
+
+        if (!string.IsNullOrEmpty(provinciaSeleccionada))
+        {
+            ListaDistritos = await UbigeoService.ObtenerDistritosAsync(provinciaSeleccionada);
+        }
+    }
+     
     // =================================================================
     // 🏢 SECCIÓN I: DATOS DE LA EMPRESA
     // =================================================================
     private string rucInputValue = "";
     private string razonSocialValue = "";
 
+    private bool bloqueadoRazonSocial = true; // Empieza bloqueado
+    private bool mostrarAdvertenciaManual = false;
+    private string rucErrorMsg = ""; // Variable para el mensaje de error
+ 
+    private async Task ValidarRuc()
+    {
+        rucErrorMsg = ""; // Limpiamos al iniciar
+
+        // 1. Validación de formato
+        if (string.IsNullOrWhiteSpace(rucInputValue) || rucInputValue.Length != 11)
+        {
+            rucErrorMsg = "El RUC debe tener 11 dígitos.";
+            bloqueadoRazonSocial = true;
+            razonSocialValue = "";
+            return;
+        }
+
+        razonSocialValue = "Buscando...";
+
+        try
+        {
+            // Ojo: En tu código llamabas al SP enviando un '3' fijo, asegúrate de que coincida con tu tipo de documento para RUC
+            var listaResultados = await DbContext.ObtenerPersonaJuridicaPorRucAsync(2, rucInputValue);
+
+            if (listaResultados != null && listaResultados.Any())
+            {
+                var empresa = listaResultados.First();
+                razonSocialValue = empresa.vEmpresa;
+                bloqueadoRazonSocial = true;
+            }
+            else
+            {
+                razonSocialValue = "";
+                bloqueadoRazonSocial = false; // Desbloqueamos para llenado manual
+                rucErrorMsg = "Documento no registrado. Complete sus datos manualmente.";
+            }
+        }
+        catch (Exception ex)
+        {
+            rucErrorMsg = $"Error al conectar con la base de datos: {ex.Message}";
+            razonSocialValue = "";
+        }
+    }
+
+     
     // =================================================================
     // 👤 SECCIÓN II: DATOS DEL REPRESENTANTE LEGAL
-    // =================================================================
-    private string repTipoDocumento = "DNI";
-    private string repNumeroDocumento = "";
-    private string repErrorDocumento = "";
-    private string repApellidoPaterno = "";
-    private string repApellidoMaterno = "";
-    private string repNombres = "";
-    private string repTelefono = "";
-    private string repCorreo = "";
-    private bool repCamposBloqueados = true;
+    // ================================================================= 
+
+    private bool bloquearDatos = true;
+
+    private void OnTipoDocumentoChange()
+    {
+        formulario.VDocPer = "";
+        errorDocumento = "";
+        formulario.VApellidoPaterno = "";
+        formulario.VApellidoMaterno = "";
+        formulario.VNombres = "";
+        bloquearDatos = formulario.ICodTipoDocPer == 1;
+    }
+
+    private void ValidarDocumento()
+    {
+        errorDocumento = "";
+
+        if (string.IsNullOrWhiteSpace(formulario.VDocPer))
+        {
+            errorDocumento = "El número de documento es obligatorio.";
+            return;
+        }
+
+        if (formulario.ICodTipoDocPer == 1) // DNI
+        {
+            if (formulario.VDocPer.Length != 8)
+            {
+                errorDocumento = "El DNI debe tener exactamente 8 dígitos numéricos.";
+            }
+        }
+        else if (formulario.ICodTipoDocPer == 3) // CE
+        {
+            if (formulario.VDocPer.Length > 10)
+            {
+                errorDocumento = "El Carnet de Extranjería (CE) no puede superar los 10 caracteres.";
+            }
+        }
+    }
+
+    private async Task ValidarDatos()
+    {
+        errorDocumento = "";
+        if (string.IsNullOrEmpty(formulario.VDocPer))
+        {
+            errorDocumento = "Debe ingresar un número de documento.";
+            return;
+        }
+
+        if (formulario.ICodTipoDocPer == 1 && (formulario.VDocPer.Length != 8 || !formulario.VDocPer.All(char.IsDigit)))
+        {
+            errorDocumento = "DNI inválido.";
+            return;
+        }
+
+        try
+        {
+            var personaEncontrada = await TipoDocPerService.BuscarPersonaPorDocumentoAsync(formulario.ICodTipoDocPer, formulario.VDocPer);
+
+            if (personaEncontrada != null)
+            {
+                formulario.VApellidoPaterno = personaEncontrada.vApellidoPaterno;
+                formulario.VApellidoMaterno = personaEncontrada.vApellidoMaterno;
+                formulario.VNombres = personaEncontrada.vNombres;
+                bloquearDatos = true;
+            }
+            else
+            {
+                errorDocumento = "Documento no registrado. Complete sus datos manualmente.";
+                formulario.VApellidoPaterno = "";
+                formulario.VApellidoMaterno = "";
+                formulario.VNombres = "";
+                bloquearDatos = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ValidarDatos] 🚨 ERROR: {ex.Message}");
+            errorDocumento = "Error al consultar la base de datos de la entidad.";
+        }
+
+        StateHasChanged();
+    }
 
     // =================================================================
     // 📁 SECCIÓN III & ADJUNTOS: DOCUMENTOS Y ANEXOS
     // =================================================================
     private IBrowserFile? archivo;
     private string? pdfPreviewUrl;
-    private List<ArchivoAdjunto> archivos = new(); // Corregido usando la Opción 1
+    private List<ArchivoAdjunto> archivos = new();
     private string error = "";
     private string urlArchivo = "";
     private bool mostrarUrl = false;
 
-    // =================================================================
-    // 🔄 CICLO DE VIDA DEL COMPONENTE
-    // =================================================================
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            // Carga de forma reactiva los tipos de documento activos al renderizar
-            listaTiposDocumento = await TipoDocService.ObtenerTiposDocumentoAsync();
-        }
-        catch (Exception ex)
-        {
-            error = "Error de conexión: No se pudieron cargar los tipos de documentos de la BD.";
-        }
-    }
-
-    // =================================================================
-    // ⚙️ MÉTODOS DE LA EMPRESA Y ACCIONES GENERALES
-    // =================================================================
-    private async Task ValidarRuc()
-    {
-        if (string.IsNullOrWhiteSpace(rucInputValue))
-        {
-            razonSocialValue = "RUC Inválido";
-            return;
-        }
-
-        razonSocialValue = "Buscando...";
-        await Task.Delay(800);
-
-        if (rucInputValue == "20123456789")
-        {
-            razonSocialValue = "EMPRESA DE PRUEBA S.A.C.";
-        }
-        else
-        {
-            razonSocialValue = $"EMPRESA ASOCIADA AL RUC {rucInputValue}";
-        }
-    }
-
-    private void Finalizar()
-    {
-        Nav.NavigateTo("/");
-    }
-
-    // =================================================================
-    // ⚙️ MÉTODOS DEL REPRESENTANTE LEGAL
-    // =================================================================
-    private void OnRepTipoDocumentoChange()
-    {
-        repNumeroDocumento = "";
-        repErrorDocumento = "";
-        repApellidoPaterno = "";
-        repApellidoMaterno = "";
-        repNombres = "";
-
-        repCamposBloqueados = (repTipoDocumento == "DNI");
-    }
-
-    private async Task ValidarRepDni()
-    {
-        repErrorDocumento = "";
-
-        if (string.IsNullOrWhiteSpace(repNumeroDocumento) || repNumeroDocumento.Length != 8)
-        {
-            repErrorDocumento = "El DNI debe tener 8 dígitos.";
-            return;
-        }
-
-        repNombres = "Buscando...";
-        repApellidoPaterno = "...";
-        repApellidoMaterno = "...";
-
-        await Task.Delay(900);
-
-        if (repNumeroDocumento == "44445555")
-        {
-            repApellidoPaterno = "PÉREZ";
-            repApellidoMaterno = "GARCÍA";
-            repNombres = "JUAN CARLOS";
-        }
-        else
-        {
-            repApellidoPaterno = "MENDOZA";
-            repApellidoMaterno = "CASTRO";
-            repNombres = "MARÍA ELENA";
-        }
-    }
+    private void Finalizar() => Nav.NavigateTo("/");
 
     // =================================================================
     // 📄 GESTIÓN DE ARCHIVOS Y COMPORTAMIENTO UI
     // =================================================================
+
     private async Task OnFileSelected(InputFileChangeEventArgs e)
     {
         error = "";
         archivo = e.File;
 
-        if (archivo == null)
-            return;
+        if (archivo == null) return;
 
         if (archivo.ContentType != "application/pdf")
         {
@@ -623,53 +738,38 @@
             return;
         }
 
-        var stream = archivo.OpenReadStream(25 * 1024 * 1024);
+        // Leer en memoria optimizado para la previsualización del PDF Principal
+        using var stream = archivo.OpenReadStream(25 * 1024 * 1024);
         using var ms = new MemoryStream();
         await stream.CopyToAsync(ms);
 
-        var base64 = Convert.ToBase64String(ms.ToArray());
-        pdfPreviewUrl = $"data:application/pdf;base64,{base64}";
+        pdfPreviewUrl = $"data:application/pdf;base64,{Convert.ToBase64String(ms.ToArray())}";
     }
 
-    private async Task HandleFilesSelected(InputFileChangeEventArgs e)
+    private void HandleFilesSelected(InputFileChangeEventArgs e)
     {
+        var permitidos = new[] { ".pdf", ".docx", ".xlsx", ".ppt", ".jpg", ".png", ".zip" };
+
+        // Procesar múltiples archivos de forma declarativa con LINQ
         foreach (var file in e.GetMultipleFiles(10))
         {
-            if (file.Size > 20 * 1024 * 1024)
-                continue;
+            if (file.Size > 20 * 1024 * 1024) continue;
 
             var ext = Path.GetExtension(file.Name).ToLower();
-            var permitidos = new[] { ".pdf", ".docx", ".xlsx", ".ppt", ".jpg", ".png", ".zip" };
-
-            if (!permitidos.Contains(ext))
-                continue;
+            if (!permitidos.Contains(ext)) continue;
 
             archivos.Add(new ArchivoAdjunto
             {
                 Nombre = file.Name,
                 Tipo = ext,
-                Tamano = $"{file.Size / 1024} KB"
+                Tamano = $"{file.Size / 1024} KB",
+                FileBrowser = file // 🌟 Guardamos la referencia física del archivo para el Service
             });
         }
     }
 
-    private void EliminarArchivo(ArchivoAdjunto archivoAdjunto)
-    {
-        archivos.Remove(archivoAdjunto);
-    }
+    private void EliminarArchivo(ArchivoAdjunto archivoAdjunto) => archivos.Remove(archivoAdjunto);
 
-    private void ToggleUrl()
-    {
-        mostrarUrl = !mostrarUrl;
-    }
-
-    // =================================================================
-    // 🏗️ ESTRUCTURAS DE DATOS LOCALES
-    // =================================================================
-    public class ArchivoAdjunto
-    {
-        public string Nombre { get; set; } = string.Empty;
-        public string Tipo { get; set; } = string.Empty;
-        public string Tamano { get; set; } = string.Empty;
-    }
+    private void ToggleUrl() => mostrarUrl = !mostrarUrl;
+     
 }   
