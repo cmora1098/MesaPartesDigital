@@ -4,9 +4,20 @@
 @inject ApplicationDbContext DbContext
 @inject UbigeoService UbigeoService
 @inject IEmailService EmailService
+@inject MesaPartesDigital.Services.DocumentoService DocumentoService
+@inject IJSRuntime JS
 
-
+@inject NavigationManager Nav
 @using Microsoft.AspNetCore.Components.Forms
+@using MesaPartesDigital.Models
+
+@if (isProcessing)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-white bg-opacity-75" style="z-index: 9999;">
+        <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem; color: #006432 !important;"></div>
+        <h5 class="mt-3 text-dark fw-bold" style="font-family: sans-serif;">Procesando y registrando su trámite empresarial...</h5>
+    </div>
+}
 
 <div class="ux-bg">
 
@@ -29,8 +40,8 @@
                 <div class="ux-field">
                     <label>RUC *</label>
                     <div class="ux-input-group">
-                        <input @bind="rucInputValue" placeholder="Ingrese RUC" maxlength="11" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
-                        <button type="button" class="ux-button" @onclick="ValidarRuc">Validar</button>
+                        <input @bind="rucInputValue" placeholder="Ingrese RUC" maxlength="11" onkeypress="return event.charCode >= 48 && event.charCode <= 57" disabled="@isProcessing" />
+                        <button type="button" class="ux-button" @onclick="ValidarRuc" disabled="@isProcessing">Validar</button>
                     </div>
                     @if (!string.IsNullOrEmpty(rucErrorMsg) && !bloqueadoRazonSocial)
                     {
@@ -46,26 +57,27 @@
                     <label>Razón Social *</label>
                     <input @bind="razonSocialValue"
                            readonly="@bloqueadoRazonSocial"
-                           class="@(bloqueadoRazonSocial ? "ux-readonly" : "")" />
+                           class="@(bloqueadoRazonSocial ? "ux-readonly" : "")"
+                           disabled="@isProcessing" />
 
                     @if (!string.IsNullOrEmpty(rucErrorMsg) && !bloqueadoRazonSocial)
                     {
                         <span class="ux-error">@rucErrorMsg</span>
                     }
                 </div>
-                
+
             </div>
 
         </div>
 
-     
+
         <div class="ux-card-form">
             <h2>II. DATOS DEL REPRESENTANTE LEGAL</h2>
 
             <div class="ux-grid-form">
                 <div class="ux-field">
                     <label>Tipo de Documento *</label>
-                    <select @bind="formulario.ICodTipoDocPer" @bind:after="OnTipoDocumentoChange">
+                    <select @bind="formulario.ICodTipoDocPer" @bind:after="OnTipoDocumentoChange" disabled="@isProcessing">
                         <option value="1">DNI</option>
                         <option value="3">CE (Carnet de Extranjería)</option>
                     </select>
@@ -77,7 +89,8 @@
                            @bind:after="ValidarDocumento"
                            maxlength="@(formulario.ICodTipoDocPer == 1 ? "8" : "10")"
                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                           placeholder="@(formulario.ICodTipoDocPer == 1 ? "Ingresar Número de DNI" : "Ingresar Número de Carnet de Extranjería")" />
+                           placeholder="@(formulario.ICodTipoDocPer == 1 ? "Ingresar Número de DNI" : "Ingresar Número de Carnet de Extranjería")"
+                           disabled="@isProcessing" />
 
                     @if (!string.IsNullOrEmpty(errorDocumento))
                     {
@@ -88,7 +101,7 @@
                 @if (formulario.ICodTipoDocPer == 1)
                 {
                     <div class="ux-field full">
-                        <button class="ux-btn-primary" @onclick="ValidarDatos" style="width: 100%;">
+                        <button class="ux-btn-primary" @onclick="ValidarDatos" style="width: 100%;" disabled="@isProcessing">
                             Validar datos
                         </button>
                     </div>
@@ -96,22 +109,22 @@
 
                 <div class="ux-field">
                     <label>Apellido Paterno *</label>
-                    <input @bind="formulario.VApellidoPaterno" disabled="@bloquearDatos" style="text-transform: uppercase;" />
+                    <input @bind="formulario.VApellidoPaterno" disabled="@(bloquearDatos || isProcessing)" style="text-transform: uppercase;" />
                 </div>
 
                 <div class="ux-field">
                     <label>Apellido Materno *</label>
-                    <input @bind="formulario.VApellidoMaterno" disabled="@bloquearDatos" style="text-transform: uppercase;" />
+                    <input @bind="formulario.VApellidoMaterno" disabled="@(bloquearDatos || isProcessing)" style="text-transform: uppercase;" />
                 </div>
 
                 <div class="ux-field">
                     <label>Nombres *</label>
-                    <input @bind="formulario.VNombres" disabled="@bloquearDatos" style="text-transform: uppercase;" />
+                    <input @bind="formulario.VNombres" disabled="@(bloquearDatos || isProcessing)" style="text-transform: uppercase;" />
                 </div>
 
                 <div class="ux-field">
                     <label>Teléfono *</label>
-                    <input @bind="formulario.VTelefono" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                    <input @bind="formulario.VTelefono" onkeypress="return event.charCode >= 48 && event.charCode <= 57" disabled="@isProcessing" />
                 </div>
 
                 <div class="ux-field">
@@ -122,13 +135,13 @@
                                @bind:after="ValidarCorreo"
                                placeholder="ejemplo@correo.com"
                                style="flex: 1 1 200px; min-width: 0;"
-                               disabled="@(codigoVerificado || enviandoCorreo)" />
+                               disabled="@(codigoVerificado || enviandoCorreo || isProcessing)" />
 
                         <button type="button"
                                 class="ux-btn-secondary"
                                 @onclick="GenerarCodigoVerificacion"
                                 style="flex: 0 0 auto; min-width: 140px; white-space: nowrap;"
-                                disabled="@(string.IsNullOrEmpty(formulario.VEmail) || !string.IsNullOrEmpty(errorCorreo) || codigoVerificado || enviandoCorreo)">
+                                disabled="@(string.IsNullOrEmpty(formulario.VEmail) || !string.IsNullOrEmpty(errorCorreo) || codigoVerificado || enviandoCorreo || isProcessing)">
                             @(enviandoCorreo ? "Enviando..." : "Generar Código")
                         </button>
                     </div>
@@ -154,7 +167,7 @@
                                    maxlength="6"
                                    placeholder="AQUÍ LOS 6 DÍGITOS"
                                    style="width: 100%; padding-right: 40px;"
-                                   disabled="@codigoVerificado" />
+                                   disabled="@(codigoVerificado || isProcessing)" />
 
                             @if (codigoVerificado)
                             {
@@ -173,7 +186,7 @@
 
                 <div class="ux-field">
                     <label>Dirección *</label>
-                    <input @bind="formulario.VDireccion" placeholder="Ej: Av. Arequipa 123, Dpto. 402, Urb. San Felipe" style="text-transform: uppercase;" />
+                    <input @bind="formulario.VDireccion" placeholder="Ej: Av. Arequipa 123, Dpto. 402, Urb. San Felipe" style="text-transform: uppercase;" disabled="@isProcessing" />
                     <small class="ux-help">
                         Ingrese vía, número, interior/departamento, urbanización o AA.HH.
                     </small>
@@ -181,7 +194,7 @@
 
                 <div class="ux-field">
                     <label>Departamento *</label>
-                    <select @bind="departamentoSeleccionado" @bind:after="OnDepartamentoChanged">
+                    <select @bind="departamentoSeleccionado" @bind:after="OnDepartamentoChanged" disabled="@isProcessing">
                         <option value="">-- SELECCIONAR --</option>
                         @if (ListaDepartamentos != null)
                         {
@@ -195,7 +208,7 @@
 
                 <div class="ux-field">
                     <label>Provincia *</label>
-                    <select @bind="provinciaSeleccionada" @bind:after="OnProvinciaChanged" disabled="@(string.IsNullOrEmpty(departamentoSeleccionado))">
+                    <select @bind="provinciaSeleccionada" @bind:after="OnProvinciaChanged" disabled="@(string.IsNullOrEmpty(departamentoSeleccionado) || isProcessing)">
                         <option value="">-- SELECCIONAR --</option>
                         @if (ListaProvincias != null)
                         {
@@ -209,7 +222,7 @@
 
                 <div class="ux-field">
                     <label>Distrito *</label>
-                    <select @bind="formulario.VCodDistrito" disabled="@(string.IsNullOrEmpty(provinciaSeleccionada))">
+                    <select @bind="formulario.VCodDistrito" disabled="@(string.IsNullOrEmpty(provinciaSeleccionada) || isProcessing)">
                         <option value="">-- SELECCIONAR --</option>
                         @if (ListaDistritos != null)
                         {
@@ -231,22 +244,9 @@
 
             <div class="ux-grid-form">
 
-                @* <div class="ux-field">
-                    <label>Tipo de Documento *</label>
-                    <select>
-                        <option>--SELECCIONAR--</option>
-                        <option>Informe</option>
-                        <option>Memo</option>
-                        <option>Carta</option>
-                        <option>Oficio</option>
-                        <option>Resoluciones</option>
-                        <option>Otros</option>
-                    </select>
-                </div> *@
-
                 <div class="ux-field">
                     <label>Tipo de Documento *</label>
-                    <select @bind="idTipoDocSeleccionado">
+                    <select @bind="idTipoDocSeleccionado" disabled="@isProcessing">
                         <option value="0">--SELECCIONAR--</option>
                         @if (listaTiposDocumento != null)
                         {
@@ -260,27 +260,27 @@
 
                 <div class="ux-field">
                     <label>Nro Documento *</label>
-                    <input />
+                    <input @bind="formulario.VNroDoc" placeholder="Ej: CARTA N° 001-2024" style="text-transform: uppercase;" disabled="@isProcessing" />
                 </div>
 
                 <div class="ux-field">
                     <label>Folio *</label>
-                    <input />
+                    <input @bind="formulario.VNroPagFolios" onkeypress="return event.charCode >= 48 && event.charCode <= 57" placeholder="Ej: 15" disabled="@isProcessing" />
                 </div>
 
                 <div class="ux-field">
                     <label>Fecha *</label>
-                    <input type="date" />
+                    <input type="date" @bind="formulario.DFecDoc" disabled="@isProcessing" />
                 </div>
 
                 <div class="ux-field full">
                     <label>Sumilla *</label>
-                    <textarea maxlength="255"></textarea>
+                    <textarea maxlength="255" @bind="asuntoTexto" placeholder="Ingrese el resumen o asunto del documento..." disabled="@isProcessing"></textarea>
                 </div>
 
                 <div class="ux-field full">
                     <label>Referencia</label>
-                    <input />
+                    <input @bind="formulario.VReferencia" placeholder="Ej: Exp. Anterior N° 4521" style="text-transform: uppercase;" disabled="@isProcessing" />
                 </div>
 
             </div>
@@ -289,11 +289,9 @@
 
         <div class="ux-card-form">
 
-            <h2>
-                Documento adjunto
-            </h2>
+            <h2>Documento adjunto</h2>
 
-            <InputFile OnChange="OnFileSelected" accept=".pdf" class="ux-file" />
+            <InputFile OnChange="OnFileSelected" accept=".pdf" class="ux-file" disabled="@isProcessing" />
 
             @if (archivo != null)
             {
@@ -310,14 +308,14 @@
             }
 
             <div class="mt-3">
-                <button type="button" class="ux-button-outline" @onclick="ToggleUrl">
+                <button type="button" class="ux-button-outline" @onclick="ToggleUrl" disabled="@isProcessing">
                     + Agregar URL
                 </button>
             </div>
 
             @if (mostrarUrl)
             {
-                <input class="ux-input-url" @bind="urlArchivo" placeholder="https://..." />
+                <input class="ux-input-url" @bind="urlArchivo" placeholder="https://..." disabled="@isProcessing" />
             }
 
         </div>
@@ -332,7 +330,7 @@
                 (Número máximo de anexos: 10)
             </p>
 
-            <InputFile OnChange="HandleFilesSelected" multiple class="ux-file" />
+            <InputFile OnChange="HandleFilesSelected" multiple class="ux-file" disabled="@isProcessing" />
 
             <div class="ux-table-wrapper">
 
@@ -357,7 +355,7 @@
                                     <td>@item.Tamano</td>
                                     <td>
                                         <button class="btn-delete" type="button"
-                                                @onclick="() => EliminarArchivo(item)">
+                                                @onclick="() => EliminarArchivo(item)" disabled="@isProcessing">
                                             Eliminar
                                         </button>
                                     </td>
@@ -389,8 +387,8 @@
             <hr class="ux-divider" />
 
             <div class="ux-actions-right">
-                <button class="ux-button" @onclick="Finalizar">
-                    Enviar solicitud
+                <button class="ux-button" type="button" @onclick="Finalizar" disabled="@(enviandoCorreo || isProcessing)">
+                    @(isProcessing ? "Procesando..." : "Enviar solicitud")
                 </button>
             </div>
 
@@ -399,7 +397,6 @@
     </div>
 
 </div>
- 
 
 
 @code {
@@ -408,26 +405,23 @@
     // =================================================================
     [Inject] private MesaPartesDigital.Services.TipoDocPerService TipoDocPerService { get; set; } = default!;
     [Inject] private MesaPartesDigital.Services.TipoDocumentoService TipoDocService { get; set; } = default!;
-    [Inject] private NavigationManager Nav { get; set; } = default!;
 
     // =================================================================
-    // 📑 DATOS DESDE LA BASE DE DATOS (PROBANDO TRAÍDA)
+    // 📑 DATOS DESDE LA BASE DE DATOS
     // =================================================================
     private List<MesaPartesDigital.Models.TipoDocumento>? listaTiposDocumento;
-    private int idTipoDocSeleccionado = 0; // Almacenará el iCodTipoDoc seleccionado (1, 2, 3, etc.)
+    private int idTipoDocSeleccionado = 0;
     private List<MesaPartesDigital.Models.TipoDocPer>? listaTiposDocPersona;
 
-
-    // =================================================================
-    //  CORREO ELECTRONICO - VALIDACION
-    // =================================================================
     private MesaPartesDigital.Models.RegistroDocumentoRequest formulario = new()
     {
-        ICodTipoDocPer = 2,
+        ICodTipoDocPer = 1, // DNI por defecto para el representante
         DFecDoc = DateTime.Today
     };
 
-
+    // Variables de UI Global
+    private bool isProcessing = false;
+    private string asuntoTexto = ""; // Mapeo correcto para la sumilla de texto
 
     // 📧 Correo y Validación OTP
     private string codigoIngresado = "";
@@ -459,7 +453,7 @@
         }
     }
 
-    private async Task GenerarCodigoVerificacion()
+    private async Task @GenerarCodigoVerificacion()
     {
         errorCodigo = "";
         errorCorreo = "";
@@ -520,7 +514,6 @@
         StateHasChanged();
     }
 
-
     // =================================================================
     //  VARIABLES DEL ESTADO PARA UBIGEO
     // =================================================================
@@ -536,8 +529,8 @@
         try
         {
             listaTiposDocPersona = await TipoDocPerService.ObtenerTiposDocPerAsync();
+            listaTiposDocumento = await TipoDocService.ObtenerTiposDocumentoAsync();
             ListaDepartamentos = await UbigeoService.ObtenerDepartamentosAsync();
-            formulario.ICodTipoDocPer = 1;
         }
         catch (Exception ex)
         {
@@ -569,22 +562,19 @@
             ListaDistritos = await UbigeoService.ObtenerDistritosAsync(provinciaSeleccionada);
         }
     }
-     
+
     // =================================================================
     // 🏢 SECCIÓN I: DATOS DE LA EMPRESA
     // =================================================================
     private string rucInputValue = "";
     private string razonSocialValue = "";
+    private bool bloqueadoRazonSocial = true;
+    private string rucErrorMsg = "";
 
-    private bool bloqueadoRazonSocial = true; // Empieza bloqueado
-    private bool mostrarAdvertenciaManual = false;
-    private string rucErrorMsg = ""; // Variable para el mensaje de error
- 
     private async Task ValidarRuc()
     {
-        rucErrorMsg = ""; // Limpiamos al iniciar
+        rucErrorMsg = "";
 
-        // 1. Validación de formato
         if (string.IsNullOrWhiteSpace(rucInputValue) || rucInputValue.Length != 11)
         {
             rucErrorMsg = "El RUC debe tener 11 dígitos.";
@@ -597,7 +587,6 @@
 
         try
         {
-            // Ojo: En tu código llamabas al SP enviando un '3' fijo, asegúrate de que coincida con tu tipo de documento para RUC
             var listaResultados = await DbContext.ObtenerPersonaJuridicaPorRucAsync(2, rucInputValue);
 
             if (listaResultados != null && listaResultados.Any())
@@ -609,7 +598,7 @@
             else
             {
                 razonSocialValue = "";
-                bloqueadoRazonSocial = false; // Desbloqueamos para llenado manual
+                bloqueadoRazonSocial = false;
                 rucErrorMsg = "Documento no registrado. Complete sus datos manualmente.";
             }
         }
@@ -620,11 +609,9 @@
         }
     }
 
-     
     // =================================================================
     // 👤 SECCIÓN II: DATOS DEL REPRESENTANTE LEGAL
-    // ================================================================= 
-
+    // =================================================================
     private bool bloquearDatos = true;
 
     private void OnTipoDocumentoChange()
@@ -647,14 +634,14 @@
             return;
         }
 
-        if (formulario.ICodTipoDocPer == 1) // DNI
+        if (formulario.ICodTipoDocPer == 1)
         {
             if (formulario.VDocPer.Length != 8)
             {
                 errorDocumento = "El DNI debe tener exactamente 8 dígitos numéricos.";
             }
         }
-        else if (formulario.ICodTipoDocPer == 3) // CE
+        else if (formulario.ICodTipoDocPer == 3)
         {
             if (formulario.VDocPer.Length > 10)
             {
@@ -717,11 +704,194 @@
     private string urlArchivo = "";
     private bool mostrarUrl = false;
 
-    private void Finalizar() => Nav.NavigateTo("/");
+    private void ToggleUrl() => mostrarUrl = !mostrarUrl;
 
     // =================================================================
-    // 📄 GESTIÓN DE ARCHIVOS Y COMPORTAMIENTO UI
+    // 🚀 EJECUCIÓN Y GUARDADO FINAL DEL TRÁMITE JURÍDICO
     // =================================================================
+    private async Task Finalizar()
+    {
+        error = "";
+
+        // 1. Validaciones básicas de negocio corporativo
+        if (string.IsNullOrWhiteSpace(rucInputValue) || string.IsNullOrWhiteSpace(razonSocialValue))
+        {
+            error = "Debe ingresar y validar el RUC y Razón Social de la empresa.";
+            return;
+        }
+
+        if (!codigoVerificado)
+        {
+            error = "Debe verificar el correo electrónico con el código OTP antes de enviar.";
+            return;
+        }
+
+        if (idTipoDocSeleccionado == 0)
+        {
+            error = "Por favor, seleccione el Tipo de Documento en la sección III.";
+            return;
+        }
+
+        if (archivo == null)
+        {
+            error = "El archivo principal PDF de la postulación es estrictamente obligatorio.";
+            return;
+        }
+
+        try
+        {
+            // Bloqueamos la interfaz con el Spinner Verde
+            isProcessing = true;
+            StateHasChanged();
+
+            // 2. Almacenamiento físico del PDF Principal
+            string rutaPrincipal = await DocumentoService.GuardarArchivoEnPCAsync(archivo);
+
+             // 3. Almacenamiento físico de anexos (Si existen)
+            var rutasAnexosTemporales = new List<string>();
+            foreach (var anexo in archivos) // <--- CORREGIDO: Declaración limpia de la variable 'anexo'
+            {
+                if (anexo.FileBrowser != null)
+                {
+                    string rutaHijo = await DocumentoService.GuardarArchivoEnPCAsync(anexo.FileBrowser);
+                    rutasAnexosTemporales.Add(rutaHijo);
+                }
+            }
+
+            // 4. Mapeos definitivos al formulario Padre
+            formulario.ICodTipoDoc = idTipoDocSeleccionado;
+            formulario.VRutaDoc = rutaPrincipal;
+            formulario.BTipo = true; // Indica documento principal (Padre)
+            formulario.VLink = urlArchivo;
+            formulario.ICodAsunto = 0; // Se mapea por DB, pero forzamos inicialización limpia
+
+            // Enviar el campo Sumilla/Asunto si tu Store Procedure lo requiere textualmente o mediante lógica interna
+            // formulario.VAsunto = asuntoTexto;
+
+            // 🏢 GUARDADO DEL PADRE: Invocación al store procedure empresarial
+            MesaPartesDigital.Models.RegistroDocumentoResponse respuestaDb =
+                await DocumentoService.RegistrarPersonaJuridicaAsync(formulario, rucInputValue, razonSocialValue);
+
+            if (respuestaDb != null && respuestaDb.Status == "OK")
+            {
+                // 5. REGISTRO DE HIJOS (Anexos en Base de Datos)
+                if (rutasAnexosTemporales.Count > 0)
+                {
+                    foreach (var rutaAnexo in rutasAnexosTemporales)
+                    {
+                        var requestHijo = new MesaPartesDigital.Models.RegistroDocumentoRequest
+                        {
+                            ICodTipoDocPer = formulario.ICodTipoDocPer,
+                            VDocPer = formulario.VDocPer,
+                            VNombres = formulario.VNombres,
+                            VApellidoPaterno = formulario.VApellidoPaterno,
+                            VApellidoMaterno = formulario.VApellidoMaterno,
+                            VEmail = formulario.VEmail,
+                            VTelefono = formulario.VTelefono,
+                            VDireccion = formulario.VDireccion,
+                            VCodDistrito = formulario.VCodDistrito,
+
+                            ICodAsunto = respuestaDb.ICodAsunto, // Vinculado directamente al Asunto asignado al Padre
+                            BTipo = false,                       // Indica que es un documento anexo (Hijo)
+                            ICodTipoDoc = formulario.ICodTipoDoc,
+                            VNroDoc = formulario.VNroDoc,
+                            DFecDoc = formulario.DFecDoc,
+                            VReferencia = "Anexo adjunto empresarial",
+                            VNroPagFolios = formulario.VNroPagFolios,
+                            VLink = null,
+                            VRutaDoc = rutaAnexo
+                        };
+
+                        await DocumentoService.RegistrarPersonaJuridicaAsync(requestHijo, rucInputValue, razonSocialValue);
+                    }
+                }
+
+                // 📧 ENVÍO DE CORREO: Hilo de fondo no bloqueante con timeout adaptativo
+                if (!string.IsNullOrEmpty(respuestaDb.VAutoGenerado) && !string.IsNullOrEmpty(respuestaDb.MailSeguimiento))
+                {
+                    string correoDestino = respuestaDb.MailSeguimiento;
+                    string codigoTramite = respuestaDb.VAutoGenerado;
+
+                    _ = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            using var cts = new System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(15));
+                            await EmailService.EnviarCargoDigitalAsync(correoDestino, codigoTramite);
+                            Console.WriteLine("[MesaPartes Jurídica] Correo corporativo enviado exitosamente.");
+                        }
+                        catch (Exception mailEx)
+                        {
+                            Console.WriteLine($"[MesaPartes Jurídica - Alerta] Error en segundo plano del correo: {mailEx.Message}");
+                        }
+                    });
+                }
+
+                // 🎨 SWEETALERT INSTITUCIONAL: Temática Verde AGRO RURAL
+                string mensajeSwal = "<div style='text-align: center; font-family: sans-serif;'>" +
+                    "<div style='background-color: #006432; margin: -1.25em -1.25em 20px -1.25em; padding: 22px 10px; border-top-left-radius: 5px; border-top-right-radius: 5px;'>" +
+                        "<h3 style='color: #ffffff; margin: 0; font-size: 1.35rem; font-weight: 600; letter-spacing: 0.5px;'>¡Registro Exitoso!</h3>" +
+                    "</div>" +
+                    "<p style='color: #444444; font-size: 0.95rem; line-height: 1.6; padding: 0 10px; margin-bottom: 20px;'>" +
+                        "Estimado usuario, la documentación de la empresa ha sido ingresada correctamente a nuestro sistema corporativo." +
+                    "</p>" +
+                    "<div style='background-color: #f7faf8; border: 1px solid #d0e1d4; border-radius: 8px; padding: 18px 15px; margin: 0 10px 20px 10px; text-align: left;'>" +
+                        "<div style='margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eef3f0; padding-bottom: 10px;'>" +
+                            "<span style='color: #555555; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;'>N° de Expediente:</span>" +
+                            "<span style='color: #006432; font-family: monospace; font-size: 1.2rem; font-weight: bold; background: #e6f0ea; padding: 4px 10px; border-radius: 4px; border: 1px solid #b3d1be;'>" + respuestaDb.VAutoGenerado + "</span>" +
+                        "</div>" +
+                        "<div style='display: flex; justify-content: space-between; align-items: center; padding-top: 2px;'> " +
+                            "<span style='color: #555555; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;'>Correo Destino:</span>" +
+                            "<span style='color: #222222; font-size: 0.9rem; font-weight: 600; text-align: right; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + respuestaDb.MailSeguimiento + "</span>" +
+                        "</div>" +
+                    "</div>" +
+                    "<div style='font-size: 0.8rem; color: #5c4817; background-color: #fff9e6; border-left: 4px solid #f39c12; padding: 12px; margin: 0 10px 10px 10px; text-align: left; border-radius: 4px; line-height: 1.4;'>" +
+                        "📌 <strong>Notificación por Correo:</strong> Se ha despachado un acuse de recibo automatizado con los detalles de la sumilla ingresada." +
+                    "</div>" +
+                "</div>";
+
+                isProcessing = false;
+                StateHasChanged();
+
+                await JS.InvokeVoidAsync("Swal.fire", new
+                {
+                    html = mensajeSwal,
+                    icon = "",
+                    confirmButtonText = "Finalizar Trámite",
+                    confirmButtonColor = "#006432",
+                    allowOutsideClick = false,
+                    allowEscapeKey = false,
+                    timer = 25000,
+                    timerProgressBar = true
+                });
+
+                Nav.NavigateTo("/");
+            }
+            else
+            {
+                isProcessing = false;
+                error = "El servidor procesó la solicitud pero no retornó una confirmación válida.";
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            isProcessing = false;
+            StateHasChanged();
+
+            error = $"Error al registrar el documento jurídico: {ex.Message}";
+            Console.WriteLine($"[Finalizar Error]: {ex.Message}");
+
+            await JS.InvokeVoidAsync("Swal.fire", new
+            {
+                title = "Error en el Servidor",
+                text = $"No se pudo completar el registro corporativo: {ex.Message}",
+                icon = "error",
+                confirmButtonText = "Entendido",
+                confirmButtonColor = "#dc3545"
+            });
+        }
+    }
 
     private async Task OnFileSelected(InputFileChangeEventArgs e)
     {
@@ -738,7 +908,6 @@
             return;
         }
 
-        // Leer en memoria optimizado para la previsualización del PDF Principal
         using var stream = archivo.OpenReadStream(25 * 1024 * 1024);
         using var ms = new MemoryStream();
         await stream.CopyToAsync(ms);
@@ -750,7 +919,6 @@
     {
         var permitidos = new[] { ".pdf", ".docx", ".xlsx", ".ppt", ".jpg", ".png", ".zip" };
 
-        // Procesar múltiples archivos de forma declarativa con LINQ
         foreach (var file in e.GetMultipleFiles(10))
         {
             if (file.Size > 20 * 1024 * 1024) continue;
@@ -763,13 +931,10 @@
                 Nombre = file.Name,
                 Tipo = ext,
                 Tamano = $"{file.Size / 1024} KB",
-                FileBrowser = file // 🌟 Guardamos la referencia física del archivo para el Service
+                FileBrowser = file
             });
         }
     }
 
     private void EliminarArchivo(ArchivoAdjunto archivoAdjunto) => archivos.Remove(archivoAdjunto);
-
-    private void ToggleUrl() => mostrarUrl = !mostrarUrl;
-     
-}   
+}

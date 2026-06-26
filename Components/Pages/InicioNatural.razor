@@ -720,7 +720,7 @@
             }
 
             // Registrar documento Padre en la BD
-            MesaPartesDigital.Models.RegistroDocumentoResponse resultadoBD = await DocumentoService.RegistrarArchivoMesaPartesAsync(formulario);
+            MesaPartesDigital.Models.RegistroDocumentoResponse resultadoBD = await DocumentoService.RegistroPersonaNatural_Home(formulario);
 
             // 4. Registrar documentos Hijos (Anexos) en la BD
             if (resultadoBD != null && resultadoBD.Status == "OK" && rutasAnexosTemporales.Count > 0)
@@ -751,7 +751,7 @@
                         VRutaDoc = rutaAnexo // Asignamos la ruta que guardamos exitosamente
                     };
 
-                    await DocumentoService.RegistrarArchivoMesaPartesAsync(requestHijo);
+                    await DocumentoService.RegistroPersonaNatural_Home(requestHijo);
                 }
             }
 
