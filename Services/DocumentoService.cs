@@ -12,7 +12,7 @@ namespace MesaPartesDigital.Services
 
         public DocumentoService(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("CadenaConexion")!;
+            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
         }
 
         // 🟢 ACTUALIZADO: Guarda el archivo principal estructurado por Año/Mes para optimizar el almacenamiento

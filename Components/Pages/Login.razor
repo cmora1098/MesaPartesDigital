@@ -1,7 +1,11 @@
 ﻿@page "/login"
 @layout EmptyLayout
 @rendermode InteractiveServer
+@inject Models.UserSession Session
 @inject NavigationManager Nav
+@inject MesaPartesDigital.Services.ILoginService LoginService
+@* 🌟 Nueva inyección para la persistencia *@
+@inject Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage.ProtectedSessionStorage SessionStorage
 
 <div class="login-wrapper">
 
@@ -35,17 +39,21 @@
 
     <main class="login-right">
         <div class="login-container-form">
-
-            <img src="img/logomax_agrorural.png" alt="Logo Agro Rural" class="login-logo-mobile" />
-
             <div class="login-box">
                 <h3>Acceso al Sistema</h3>
                 <p class="login-subtitle">Ingrese sus credenciales para continuar</p>
 
+                @if (!string.IsNullOrEmpty(mensajeAlert))
+                {
+                    <div class="alert @(esExito ? "alert-success" : "alert-danger")" style="...">
+                        @mensajeAlert
+                    </div>
+                }
+
                 <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
                     <div class="input-group">
-                        <label for="documento">Número de Documento</label>
-                        <input id="documento" type="text" @bind-value="loginModel.Documento" placeholder="Ej. 45678912" required />
+                        <label for="documento">Correo Electrónico</label>
+                        <input id="documento" type="text" @bind-value="loginModel.Documento" placeholder="Ej. ejemplo@xxxx.com" required />
                     </div>
 
                     <div class="input-group">
@@ -53,39 +61,101 @@
                         <input id="password" type="password" @bind-value="loginModel.Password" placeholder="••••••••" required />
                     </div>
 
-                    <button type="submit" class="btn-login">
-                        Ingresar de forma segura
+                    <button type="submit" class="btn-login" disabled="@isProcessing">
+                        @if (isProcessing)
+                        {
+                            <span>Validando...</span>
+                        }
+                        else
+                        {
+
+                            <span>Ingresar de forma segura</span>
+                        }
                     </button>
                 </EditForm>
 
-                <div class="login-actions-secondary">
-                    <button type="button" class="btn-link" @onclick="IrAGenerarClave">Generar clave</button>
-                    <span class="divider">|</span>
-                    <button type="button" class="btn-link" @onclick="IrARecuperar">¿Olvidó su contraseña?</button>
+                <div class="login-actions-secondary" style="...">
+                    <button type="button" class="btn-link" @onclick="ProcesarRecuperacionClave" disabled="@isProcessing">
+                        ¿No recuerdas tu clave? Genere una nueva aquí
+                    </button>
                 </div>
             </div>
-
-            <section class="soporte-box" aria-label="Soporte Técnico">
-                <h4>Soporte y Consultas</h4>
-                <p>📞 (01) 2058030 <span class="anexo">Anexo 0105</span></p>
-                <p>🕒 Lunes a Viernes de 8:30 a. m. a 4:30 p. m.</p>
-            </section>
         </div>
     </main>
 
 </div>
 
+
 @code {
     private LoginModel loginModel = new();
+    private string mensajeAlert = string.Empty;
+    private bool esExito = false;
+    private bool isProcessing = false;
 
-    private void HandleLogin()
+
+    protected override void OnInitialized()
     {
-        // Aquí puedes agregar la lógica de autenticación real
-        Nav.NavigateTo("/dashboard");
+        // Limpiamos cualquier rastro previo al entrar al login
+        Session.ICodPer = 0;
+        Session.VNombreCompleto = string.Empty;
     }
 
-    private void IrAGenerarClave() => Nav.NavigateTo("/generar-clave");
-    private void IrARecuperar() => Nav.NavigateTo("/recuperar-password");
+    private async Task HandleLogin()
+    {
+        isProcessing = true;
+        mensajeAlert = string.Empty;
+        esExito = false;
+
+        var resultado = await LoginService.ValidarCredencialesAsync(loginModel.Documento, loginModel.Password);
+
+        if (resultado.Exitoso)
+        {
+            // 1. Asignamos los datos a la sesión en memoria
+            Session.ICodPer = resultado.ICodPer;
+            Session.VNombreCompleto = resultado.VNombreCompleto;
+            Session.VEmail = resultado.VEmail;
+
+            // 2. 🌟 Persistimos un objeto limpio (DTO) para evitar errores de serialización
+            var userSessionDto = new Models.UserSession
+            {
+                ICodPer = resultado.ICodPer,
+                VNombreCompleto = resultado.VNombreCompleto,
+                VEmail = resultado.VEmail
+            };
+
+            await SessionStorage.SetAsync("user_session", userSessionDto);
+
+            Nav.NavigateTo("/dashboard", true); // 🌟 El 'true' fuerza la recarga completa
+        }
+        else
+        {
+            mensajeAlert = resultado.Mensaje;
+            esExito = false;
+        }
+
+        isProcessing = false;
+    }
+
+    private async Task ProcesarRecuperacionClave()
+    {
+        mensajeAlert = string.Empty;
+        esExito = false;
+
+        if (string.IsNullOrWhiteSpace(loginModel.Documento))
+        {
+            mensajeAlert = "Por favor, ingrese su correo electrónico primero para poder restablecer su clave.";
+            return;
+        }
+
+        isProcessing = true;
+
+        var resultado = await LoginService.GestionarCredencialesAsync(loginModel.Documento, null, 2);
+
+        esExito = resultado.Exitoso;
+        mensajeAlert = resultado.Mensaje;
+
+        isProcessing = false;
+    }
 
     public class LoginModel
     {
