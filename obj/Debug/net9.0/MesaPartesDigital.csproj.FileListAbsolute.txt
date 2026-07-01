@@ -204,8 +204,6 @@ C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\gepmcq
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\ihhr6rntlw-h1s4sie4z3.gz
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\jt3hpbuful-4d85u1mtcx.gz
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\6xawqp5hv3-0j3bgjxly4.gz
-C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\z7ffcz6gus-eqpbinugiy.gz
-C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\g2tieop9t1-eqpbinugiy.gz
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\staticwebassets.build.json.cache
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\staticwebassets.development.json
@@ -217,3 +215,5 @@ C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\MesaPartesDigital
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\MesaPartesDigital.genruntimeconfig.cache
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\ref\MesaPartesDigital.dll
 C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
+C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\z7ffcz6gus-pqj87ajufe.gz
+C:\Users\cmora\source\repos\MesaPartesDigital\obj\Debug\net9.0\compressed\g2tieop9t1-pqj87ajufe.gz

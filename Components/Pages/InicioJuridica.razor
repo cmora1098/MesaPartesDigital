@@ -275,7 +275,7 @@
 
                 <div class="ux-field full">
                     <label>Sumilla *</label>
-                    <textarea maxlength="255" @bind="asuntoTexto" placeholder="Ingrese el resumen o asunto del documento..." disabled="@isProcessing"></textarea>
+                    <textarea maxlength="255" @bind="asuntoTexto" placeholder="Ingrese el resumen o asunto del documento..." style="text-transform: uppercase;" disabled="@isProcessing"></textarea>
                 </div>
 
                 <div class="ux-field full">
@@ -937,4 +937,5 @@
     }
 
     private void EliminarArchivo(ArchivoAdjunto archivoAdjunto) => archivos.Remove(archivoAdjunto);
+
 }
